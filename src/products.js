@@ -1,10 +1,13 @@
+const image = name => new URL(`../public/products/${name}.webp`, import.meta.url).pathname;
+
+// Демонстрационные цены в рублях. Идентификаторы сохраняются для прежних товаров.
 export const products = [
- {id:1,name:'Wireless headphones',price:5990,image:new URL('../public/products/headphones.svg',import.meta.url).pathname},
- {id:2,name:'Bluetooth speaker',price:2990,image:new URL('../public/products/speaker.svg',import.meta.url).pathname},
- {id:3,name:'Everyday mug',price:790,image:new URL('../public/products/mug.svg',import.meta.url).pathname},
- {id:4,name:'City backpack',price:3490,image:new URL('../public/products/backpack.svg',import.meta.url).pathname},
- {id:5,name:'Wireless keyboard',price:4490,image:new URL('../public/products/keyboard.svg',import.meta.url).pathname},
- {id:6,name:'Desk lamp',price:2490,image:new URL('../public/products/lamp.svg',import.meta.url).pathname},
- {id:7,name:'Power bank',price:1990,image:new URL('../public/products/powerbank.svg',import.meta.url).pathname},
- {id:8,name:'Essential T-shirt',price:1490,image:new URL('../public/products/tshirt.svg',import.meta.url).pathname}
+  { id: 1, name: 'Беспроводные наушники', description: 'Полноразмерные наушники в серебристом корпусе с мягкими амбушюрами. Для музыки, работы и отдыха.', price: 24990, image: image('headphones') },
+  { id: 2, name: 'Умная колонка', description: 'Компактная колонка со светлым текстильным корпусом и разноцветной подсветкой верхней панели.', price: 14990, image: image('speaker') },
+  { id: 10, name: 'Беспроводной контроллер', description: 'Бело-чёрный игровой контроллер с двумя стиками и удобными рукоятками для домашних игровых вечеров.', price: 6990, image: image('controller') },
+  { id: 4, name: 'Городской рюкзак', description: 'Лаконичный графитовый рюкзак с мягкими лямками. Для повседневных вещей и поездок по городу.', price: 7990, image: image('backpack') },
+  { id: 9, name: 'Ноутбук', description: 'Ноутбук в тёмном корпусе с большим экраном и просторной клавиатурой. Для работы, учёбы и творчества.', price: 129990, image: image('laptop') },
+  { id: 6, name: 'Настольная лампа', description: 'Минималистичная чёрная лампа с направленным светом и круглым основанием для рабочего стола.', price: 3490, image: image('lamp-mug'), imagePart: 'left' },
+  { id: 3, name: 'Кружка с пробковой основой', description: 'Светлая керамическая кружка с удобной ручкой и пробковой основой. Для любимого кофе или чая.', price: 1290, image: image('lamp-mug'), imagePart: 'right' },
+  { id: 8, name: 'Футболка оверсайз', description: 'Чёрная футболка свободного силуэта с круглым вырезом и лаконичной эмблемой на груди.', price: 2990, image: image('tshirt') }
 ];

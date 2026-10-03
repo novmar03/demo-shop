@@ -1,34 +1,46 @@
-# Demo Store
+# Демо-магазин CloudPayments
 
-A dependency-free storefront with eight products, a separate `/cart` page, quantity controls, removal, live totals, accessible empty state and localStorage persistence.
+Сайт: https://novmar03.github.io/demo-shop/
 
-## Run
+Восемь товаров, отдельная страница корзины, изменение количества, удаление, автоматический расчёт суммы и сохранение корзины в localStorage. На карточке после добавления отображаются количество и кнопки «−» / «+». Интерфейс, уведомления, подписи доступности и заголовки страниц — на русском.
 
-Requires Node.js 20 or newer.
+## Запуск
+
+Нужен Node.js 20 или новее. Установка зависимостей не требуется.
 
 ```sh
 npm start
+npm test
 ```
 
-Open http://localhost:3000. Run `npm test` for cart calculation and persistence tests. No package installation is needed.
+Локальный адрес: http://localhost:3000.
 
-## Architecture and next payment stage
+## Структура
 
-- `src/products.js`: numeric RUB prices and local product illustrations.
-- `src/cart.js`: pure cart mutations, validated storage and `orderSnapshot(cart, orderId)`.
-- `src/app.js`: catalog/cart UI, browser history and checkout placeholder.
+- `src/products.js` — товары, русские описания, демонстрационные цены в рублях и фотографии.
+- `src/cart.js` — операции с корзиной, проверка сохранённых данных и структурированный `orderSnapshot(cart, orderId)`.
+- `src/ui.js` — форматирование, карточки, изображения и счётчики.
+- `src/app.js` — каталог, корзина, навигация и заглушка оплаты.
+- `src/styles.css` — фирменные цвета, типографика, кнопки и адаптивная сетка.
 
-The snapshot contains `orderId` (currently null), `currency`, selected product data, quantities, subtotals, total item count and `totalAmount`. Pay emits a `demo-store:checkout` CustomEvent with that snapshot, then displays the requested placeholder message. It makes no payment/network calls. A future payment adapter can consume the snapshot; real totals/order IDs must then be validated and created on a backend.
+Снимок заказа содержит `orderId` (пока null), валюту, товары, количества, суммы строк, общее количество и итоговую сумму. Кнопка «Оплатить» отправляет событие `demo-store:checkout` со снимком и показывает сообщение. Платёжных запросов нет. При подключении настоящей оплаты сервер должен проверять цены и создавать идентификатор заказа.
 
-Cart quantities are limited to 999 per product and never fall below one. Invalid stored data is discarded. If browser storage is blocked, the cart continues in memory with a notice.
+Максимум — 999 единиц одного товара. В корзине минимум — одна единица; полное удаление доступно отдельно. На карточке «−» при одной единице убирает товар. При блокировке localStorage используется память страницы. При изменении каталога неизвестные идентификаторы удаляются из восстановленной корзины; существующие товары сохраняются.
 
-## Design
+## Оформление и материалы
 
-Primary buttons adapted from the supplied [Figma UI library](https://www.figma.com/design/XbFxURJJQ1jlfXNPeBwHWe/Design-code?node-id=1-1019): Neu Classic M-48 default/hover (`1:1019`, `1:1024`), blue #2E71FC / #265DCE, 48px height, 8px radius, 14px text. Optional Figma button icons are disabled; the storefront uses its own cart icon. Stolzl is named in the font stack with system fallbacks because no licensed font file was supplied. Product images are original local SVG illustrations. The static promo uses CloudPayments brand text and a blue gradient. No reference homepage image was attached in this implementation request; layout follows the written specification.
+Основой служит [UI-библиотека Cloud](https://www.figma.com/design/XbFxURJJQ1jlfXNPeBwHWe/Design-code?node-id=0-1): кнопки Neu Classic M-48 (`1:1019`, `1:1024`, `1:1319`), высота 48 px, радиус 8 px, текст 14/20 px; синий `#2E71FC`, наведение `#265DCE`, основной текст `#222D41`. Заголовок — Stolzl Medium 36/42, основной текст — Stolzl Regular. SVG-выгрузки иконок Figma оказались недоступны; линейные иконки магазина — дополнительные локальные SVG с сеткой 24 px.
 
-Grid: four columns above 1000px, two through tablet widths, one at 600px and below. The cart summary stacks below items on smaller screens.
+Локальные файлы Stolzl Regular и Medium и полный белый логотип CloudPayments получены с официального сайта. Логотип используется без изменения на тёмной подложке:
 
-## Hosting
+- https://cdn.t-static.ru/params/common_front/resourses/cloudpayments/fonts/Stolzl-Regular.woff2
+- https://cdn.t-static.ru/params/common_front/resourses/cloudpayments/fonts/Stolzl-Medium.woff2
+- https://cdn.t-static.ru/static/pages/files/c9c3f2c7-9556-4042-8e33-88d4697c7c63.svg
 
-Published via GitHub Pages from the main branch at https://novmar03.github.io/demo-shop/.
-The cart has a static entry at `cart/index.html`, so direct visits and refreshes work at `/demo-shop/cart/`. Asset and navigation paths resolve relative to the installation directory, supporting both GitHub Pages and a root deployment. `.nojekyll` disables unnecessary Jekyll processing.
+Фотографии предоставлены пользователем и оптимизированы в WebP с сохранением прозрачности. Лампа и кружка используют разные половины одного изображения, выделенные средствами CSS. Описания основаны на изображениях, цены демонстрационные. Иконка вкладки — локальная SVG-корзина.
+
+## Публикация
+
+GitHub Pages публикует ветку `main`. Корзина имеет статический вход `cart/index.html` и доступна по `/demo-shop/cart/`, включая прямое открытие и обновление. Пути учитывают каталог установки. Файл `.nojekyll` отключает обработку Jekyll.
+
+Сетка: четыре колонки на компьютере, две на планшете и одна на телефоне. На узком экране блок заказа перемещается под товары.
