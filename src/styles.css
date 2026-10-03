@@ -20,3 +20,5 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 .image-frame>img{position:absolute;inset:0}
 .image-part{flex:none;max-width:100%}
 .image-right>img{left:auto;right:0}
+.payment-scenarios{margin-top:48px;padding:28px;background:#fff;border:1px solid #e4e9f1;border-radius:16px}.payment-scenarios h2{font-size:20px;margin:0 0 20px}.scenario-buttons{display:flex;gap:12px;flex-wrap:wrap}.scenario-button{background:#fff;color:var(--blue,#2e71fc);border:1px solid #2e71fc}.scenario-button:hover{background:#edf3ff;color:#265dce}.scenario-button[aria-current=page]{background:#2e71fc;color:#fff}.payment-blocks{min-width:0;margin-top:20px}.payment-blocks>p{font-size:14px;line-height:22px}.summary:has(.payment-blocks){min-width:0}.cart-layout:has(.payment-blocks){grid-template-columns:minmax(0,1fr) minmax(360px,440px)}
+@media(max-width:900px){.cart-layout:has(.payment-blocks){grid-template-columns:1fr}}@media(max-width:600px){.payment-scenarios{padding:20px;margin-top:32px}.scenario-buttons{flex-direction:column}.scenario-button{width:100%}.summary:has(.payment-blocks){padding:16px}}
