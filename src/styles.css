@@ -14,3 +14,9 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 /* Официальный белый логотип на тёмной фирменной подложке. */
 .site-header{background:var(--ink);border-radius:0 0 20px 20px;margin-bottom:20px}.brand-caption{color:#d8e0ed}.brand-divider{background:#ffffff30}
 @media(max-width:600px){.site-header{border-radius:0;margin-bottom:16px}}
+/* Не даём естественному размеру фото расширять область изображения. */
+.product-image{display:flex;align-items:center;justify-content:center}
+.image-frame{display:block;min-width:0;min-height:0}
+.image-frame>img{position:absolute;inset:0}
+.image-part{flex:none;max-width:100%}
+.image-right>img{left:auto;right:0}
