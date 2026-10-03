@@ -30,4 +30,5 @@ Grid: four columns above 1000px, two through tablet widths, one at 600px and bel
 
 ## Hosting
 
-Deploy these files on a static host with `/cart` rewritten to `index.html`, or run the included Node server which handles that route. Repository publication alone does not enable a public hosted website.
+Published via GitHub Pages from the main branch at https://novmar03.github.io/demo-shop/.
+The cart has a static entry at `cart/index.html`, so direct visits and refreshes work at `/demo-shop/cart/`. Asset and navigation paths resolve relative to the installation directory, supporting both GitHub Pages and a root deployment. `.nojekyll` disables unnecessary Jekyll processing.
