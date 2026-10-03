@@ -1,3 +1,4 @@
+import { openPayment } from './payment.js';
 import { products } from './products.js';
 import { STORAGE_KEY, loadCart, saveCart, updateCart, orderSnapshot } from './cart.js';
 import { money, productCount, icon, productImage, quantityControls, productCard } from './ui.js';
@@ -12,6 +13,7 @@ let storage;
 try { storage = window.localStorage; } catch {}
 let cart = loadCart(storage);
 let toastTimer;
+let paymentPending = false;
 
 function toast(message) {
   const el = document.querySelector('#toast');
@@ -46,13 +48,13 @@ function render({ focusHeading = false } = {}) {
         <div class="item-details"><h2>${p.name}</h2><p>${money(p.price)} за шт.</p><button type="button" class="remove" data-action="remove" data-id="${p.id}" aria-label="Удалить из корзины: ${p.name}">${icon('trash')}Удалить</button></div>
         ${quantityControls(p, p.quantity)}<strong class="subtotal">${money(p.subtotal)}</strong>
       </article>`).join('')}</section>
-      <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Ваш заказ</h2><p class="summary-line"><span>Товары</span><span>${order.itemCount} шт.</span></p><div class="total"><span>Итого</span><strong>${money(order.totalAmount)}</strong></div><button type="button" class="button pay" data-pay>Оплатить</button><p class="summary-note">Демо-режим: деньги не списываются</p></aside>
+      <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Ваш заказ</h2><p class="summary-line"><span>Товары</span><span>${order.itemCount} шт.</span></p><div class="total"><span>Итого</span><strong>${money(order.totalAmount)}</strong></div><button type="button" class="button pay" data-pay>Оплатить</button><p class="summary-note">Оплата через CloudPayments</p></aside>
     </div>` : `<section class="empty"><span class="empty-icon">${icon('cart')}</span><h2>Ваша корзина пуста</h2><p>Добавьте понравившиеся товары из каталога</p><a href="${basePath}" data-nav class="button">Перейти в каталог</a></section>`);
   }
   if (focusHeading) app.querySelector('h1')?.focus({ preventScroll: true });
 }
 
-document.addEventListener('click', event => {
+document.addEventListener('click', async event => {
   const nav = event.target.closest('[data-nav]');
   if (nav && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
     event.preventDefault();
@@ -78,8 +80,29 @@ document.addEventListener('click', event => {
     return;
   }
   if (event.target.closest('[data-pay]')) {
-    window.dispatchEvent(new CustomEvent('demo-store:checkout', { detail: orderSnapshot(cart) }));
-    toast('Оплата будет доступна на следующем этапе. Сейчас деньги не списываются.');
+    if (paymentPending) return;
+    paymentPending = true;
+    const button = event.target.closest('[data-pay]');
+    button.disabled = true;
+    button.textContent = 'Открываем оплату…';
+    const order = orderSnapshot(cart);
+    window.dispatchEvent(new CustomEvent('demo-store:checkout', { detail: order }));
+    try {
+      const result = await openPayment(order);
+      window.dispatchEvent(new CustomEvent('demo-store:payment-result', { detail: { order, result } }));
+      if (result?.status === 'success') toast('CloudPayments сообщает об успешной оплате.');
+      else if (result?.type === 'cancel') toast('Форма оплаты закрыта. Корзина сохранена.');
+      else if (result?.type === 'error' || result?.status === 'fail') toast('Оплата не завершена. Попробуйте ещё раз.');
+    } catch {
+      toast('Не удалось открыть оплату. Проверьте соединение и попробуйте ещё раз.');
+    } finally {
+      paymentPending = false;
+      const currentButton = app.querySelector('[data-pay]');
+      if (currentButton) {
+        currentButton.disabled = false;
+        currentButton.textContent = 'Оплатить';
+      }
+    }
   }
 });
 window.addEventListener('popstate', () => render({ focusHeading: true }));
