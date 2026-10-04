@@ -44,8 +44,11 @@ function render({ focusHeading = false } = {}) {
 
   if (!isCart) {
     app.innerHTML = `<section class="promo" aria-labelledby="promo-title">
-      <div class="promo-copy"><span class="eyebrow">ДЕМО-МАГАЗИН</span><h1 id="promo-title" tabindex="-1">Приятные покупки.<br>Простая оплата.</h1><p>Выбирайте то, что нравится.<br class="mobile-break"> Всё остальное — с CloudPayments.</p></div>
-      <div class="promo-art" aria-hidden="true"><div class="promo-orbit"></div><div class="demo-card"><span>ПОКУПКИ В УДОВОЛЬСТВИЕ</span><strong>Всё начинается<br>с одного выбора.</strong><div class="demo-card-bottom"><span>Добавьте в корзину</span>${icon('cart')}</div></div></div>
+      <img class="promo-reference" src="${basePath}public/brand/promo-cloudpayments.webp" alt="" width="1096" height="445">
+      <span class="promo-dot-cover" aria-hidden="true"></span>
+      <h1 id="promo-title" class="promo-mobile-title" tabindex="-1">Прием платежей для цифровых товаров и услуг</h1>
+      <p class="promo-mobile-details">Быстрое подключение за 1 ₽ · Прием платежей и фискализация по 54-ФЗ · Платежи по подписке, в том числе через СБП</p>
+      <a class="promo-connect" href="https://cloudpayments.ru/" aria-label="Подключить CloudPayments"><span>Подключить</span></a>
     </section>
     <div class="section-heading"><div><span class="eyebrow section-eyebrow">ДЛЯ РАБОТЫ И ОТДЫХА</span><h2>Выберите своё</h2></div><span class="catalog-count">${productCount(products.length)}</span></div>
     <section class="catalog" aria-label="Каталог товаров">${products.map(p => productCard(p, cart.find(i => i.id === p.id)?.quantity || 0)).join('')}</section>
@@ -60,7 +63,7 @@ function render({ focusHeading = false } = {}) {
       <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Ваш заказ</h2><p class="summary-line"><span>Товары</span><span>${order.itemCount} шт.</span></p><div class="total"><span>Итого</span><strong>${money(order.totalAmount)}</strong></div>${isCheckout ? checkoutForm(order) : isBlocks ? '<div id="payment-blocks" class="payment-blocks"><p role="status">Загружаем способы оплаты…</p></div>' : '<button type="button" class="button pay" data-pay>Оплатить</button>'}<p class="summary-note">Оплата через CloudPayments</p></aside>
     </div>` : `<section class="empty"><span class="empty-icon">${icon('cart')}</span><h2>Ваша корзина пуста</h2><p>Добавьте понравившиеся товары из каталога</p><a href="${basePath}" data-nav class="button">Перейти в каталог</a></section>`);
   }
-  app.insertAdjacentHTML('beforeend', `<nav class="payment-scenarios" aria-label="Платежные сценарии"><h2>Платежные сценарии</h2><div class="scenario-buttons"><a class="button scenario-button" href="${cartPath}" data-nav ${isCart && !isBlocks && !isCheckout ? 'aria-current="page"' : ''}>Виджет</a><a class="button scenario-button" href="${blocksPath}" data-nav ${isBlocks ? 'aria-current="page"' : ''}>Платежные блоки</a><a class="button scenario-button" href="${checkoutPath}" data-nav ${isCheckout ? 'aria-current="page"' : ''}>Check-out</a></div></nav>`);
+  if (isCart) app.insertAdjacentHTML('beforeend', `<nav class="payment-scenarios" aria-label="Платежные сценарии"><h2>Платежные сценарии</h2><div class="scenario-buttons"><a class="button scenario-button" href="${cartPath}" data-nav ${!isBlocks && !isCheckout ? 'aria-current="page"' : ''}>Виджет</a><a class="button scenario-button" href="${blocksPath}" data-nav ${isBlocks ? 'aria-current="page"' : ''}>Платежные блоки</a><a class="button scenario-button" href="${checkoutPath}" data-nav ${isCheckout ? 'aria-current="page"' : ''}>Check-out</a></div></nav>`);
   if (isBlocks && order.items.length) {
     disposeBlocks = mountBlocks(document.querySelector('#payment-blocks'), order, (snapshot, result) => {
       window.dispatchEvent(new CustomEvent('demo-store:payment-result', { detail: { order: snapshot, result } }));
