@@ -25,10 +25,10 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 .checkout-form{margin-top:24px;min-width:0}.checkout-form h3{font-size:18px}.checkout-form label{display:block;font-size:12px;line-height:20px;margin:14px 0}.checkout-form input{display:block;box-sizing:border-box;width:100%;min-width:0;margin-top:6px;padding:12px;border:1px solid #cdd6e5;border-radius:8px;font:inherit;font-size:14px;background:#fff;color:#222d41}.checkout-form input:focus{outline:2px solid #2e71fc;outline-offset:2px}.checkout-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.checkout-note,.checkout-status{font-size:12px;line-height:20px;color:#586579}.checkout-form .pay{width:100%}
 
 /* The supplied promotion is a static visual; the CTA is an actual link layered over it. */
-.promo{display:block;min-height:0;padding:0;aspect-ratio:1096/445;background:#102d67;border-radius:20px}
-.promo-reference{display:block;width:100%;height:100%;object-fit:fill}
-.promo-dot-cover{position:absolute;left:45.75%;top:81.1%;width:8.3%;height:5.4%;background:linear-gradient(90deg,#0d2e70,#0d3178);box-shadow:0 0 5px 4px #0d3075;pointer-events:none}
-.promo-connect{position:absolute;left:12.5%;top:68.3%;width:10.5%;height:7.7%;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#fff;text-decoration:none;font-size:0;z-index:1}
+.promo{display:block;min-height:0;padding:0;aspect-ratio:1096/354;background:#102d67;border-radius:20px}
+.promo-reference{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+.promo-dot-cover{display:none}
+.promo-connect{position:absolute;left:12.5%;top:85.8%;width:10.5%;height:9.6%;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#fff;text-decoration:none;font-size:0;z-index:1}
 .promo-connect:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .promo-connect span,.promo-mobile-title,.promo-mobile-details{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .payment-scenarios{width:100%;box-sizing:border-box;padding:32px 36px}
