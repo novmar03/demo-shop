@@ -44,7 +44,7 @@ function render({ focusHeading = false } = {}) {
 
   if (!isCart) {
     app.innerHTML = `<section class="promo" aria-labelledby="promo-title">
-      <img class="promo-reference" src="${basePath}public/brand/promo-cloudpayments.webp?v=20261004-2" alt="" width="2000" height="652">
+      <img class="promo-reference" src="${basePath}public/brand/promo-digital-services.webp" alt="" width="2048" height="768">
       <h1 id="promo-title" class="promo-mobile-title" tabindex="-1">Прием платежей для цифровых товаров и услуг</h1>
       <p class="promo-mobile-details">Быстрое подключение за 1 ₽ · Прием платежей и фискализация по 54-ФЗ · Платежи по подписке, в том числе через СБП</p>
       <a class="promo-connect" href="https://cloudpayments.ru/" aria-label="Подключить CloudPayments"><span>Подключить</span></a>

@@ -25,17 +25,17 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 .checkout-form{margin-top:24px;min-width:0}.checkout-form h3{font-size:18px}.checkout-form label{display:block;font-size:12px;line-height:20px;margin:14px 0}.checkout-form input{display:block;box-sizing:border-box;width:100%;min-width:0;margin-top:6px;padding:12px;border:1px solid #cdd6e5;border-radius:8px;font:inherit;font-size:14px;background:#fff;color:#222d41}.checkout-form input:focus{outline:2px solid #2e71fc;outline-offset:2px}.checkout-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.checkout-note,.checkout-status{font-size:12px;line-height:20px;color:#586579}.checkout-form .pay{width:100%}
 
 /* The supplied promotion is a static visual; the CTA is an actual link layered over it. */
-.promo{display:block;min-height:0;padding:0;aspect-ratio:1096/354;background:#102d67;border-radius:20px}
+.promo{display:block;min-height:0;padding:0;aspect-ratio:2048/768;background:#fff;border-radius:20px}
 .promo-reference{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
-.promo-connect{position:absolute;left:11.5%;top:82%;width:10.6%;height:9.8%;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#fff;text-decoration:none;font-size:0;z-index:1}
+.promo-connect{position:absolute;left:7.9%;top:75.9%;width:13.1%;height:10%;display:flex;align-items:center;justify-content:center;border-radius:8px;color:#fff;text-decoration:none;font-size:clamp(12px,1.2vw,16px);z-index:1;background:#2e71fc;transition:background-color .16s}
 .promo-connect:focus-visible{outline:3px solid #fff;outline-offset:3px}
-.promo-connect span,.promo-mobile-title,.promo-mobile-details{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.promo-mobile-title,.promo-mobile-details{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .payment-scenarios{width:100%;box-sizing:border-box;padding:32px 36px}
 .payment-scenarios h2{font-size:22px;line-height:30px}
 .scenario-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
 .scenario-button{width:100%;height:56px;box-sizing:border-box;font-size:16px;line-height:24px}
 @media(max-width:700px){
-  .promo{aspect-ratio:auto;min-height:360px;padding:28px 24px;background:linear-gradient(90deg,#102b61 15%,#123675c9 100%),url('../public/brand/promo-cloudpayments.webp?v=20261004-2') right center/auto 100% no-repeat}
+  .promo{aspect-ratio:auto;min-height:360px;padding:28px 24px;background:linear-gradient(90deg,#102b61 15%,#123675c9 100%),url('../public/brand/promo-digital-services.webp') right center/auto 100% no-repeat}
   .promo-reference{display:none}
   .promo-mobile-title,.promo-mobile-details{position:relative;display:block;width:auto;height:auto;margin:0;overflow:visible;clip:auto;white-space:normal;color:#fff}
   .promo-mobile-title{max-width:350px;font-size:27px;line-height:34px}
@@ -45,3 +45,5 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
   .scenario-buttons{gap:12px}
 }
 @media(max-width:600px){.payment-scenarios{padding:20px}.scenario-buttons{grid-template-columns:1fr}.scenario-button{height:52px}}
+
+.promo-connect:hover{background-color:#2560d4}
