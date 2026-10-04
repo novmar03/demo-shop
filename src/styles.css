@@ -11,8 +11,8 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 @media(max-width:600px){.site-header{padding:22px 20px}.brand-logo{width:165px;height:30px}main{padding:4px 20px 36px}.promo{border-radius:16px;padding:26px 24px;min-height:230px}.promo h1{font-size:28px;line-height:36px}.promo-copy>p{font-size:12px;line-height:20px}.mobile-break{display:block}.section-heading{margin:28px 0 20px}.section-heading h2{font-size:24px;line-height:28px}.section-eyebrow{font-size:9px;letter-spacing:1px}.catalog-count{font-size:12px}.catalog{grid-template-columns:1fr;gap:20px}.product-image{height:260px;padding:28px}.product-info{padding:22px}.product h3{min-height:0;font-size:18px;line-height:26px;letter-spacing:.18px}.product-description{min-height:0;font-size:14px;line-height:20px;letter-spacing:.22px;margin:10px 0 20px}.product-controls{height:76px}.price-row strong{font-size:24px;line-height:30px}.site-footer{margin:0 20px;padding:22px 0;flex-direction:column;gap:6px}.cart-title{gap:12px;flex-wrap:wrap;margin-bottom:24px}.cart-title>span{font-size:12px}.cart-row{grid-template-columns:60px minmax(0,1fr);gap:14px}.cart-image{height:72px;padding:6px}.cart-row .quantity{grid-column:2;grid-row:2;max-width:140px}.subtotal{grid-column:2;grid-row:3;text-align:left}.summary{padding:22px}.summary h2{font-size:22px}.pay{max-width:none}.summary-note{text-align:center}.empty{padding:48px 20px}.empty h2{font-size:22px}.empty p{font-size:14px}#toast{bottom:16px;font-size:12px;line-height:20px}}
 @media(max-width:360px){.site-header{padding:18px 16px}.brand-logo{width:143px;height:26px}.cart-link{min-width:108px;font-size:12px}main{padding-left:16px;padding-right:16px}.promo{padding:24px 20px}.promo h1{font-size:25px;line-height:34px}.section-heading{gap:8px}.catalog-count{font-size:11px}.product-info{padding:18px}.product-image{height:240px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-/* Официальный белый логотип на тёмной фирменной подложке. */
-.site-header{background:var(--ink);border-radius:0 0 20px 20px;margin-bottom:20px}.brand-caption{color:#d8e0ed}.brand-divider{background:#ffffff30}
+/* Светлая шапка магазина. */
+.site-header{background:#fff;border-radius:0;margin-bottom:20px}.brand-caption{color:var(--muted)}.brand-divider{background:var(--line)}
 @media(max-width:600px){.site-header{border-radius:0;margin-bottom:16px}}
 /* Не даём естественному размеру фото расширять область изображения. */
 .product-image{display:flex;align-items:center;justify-content:center}
@@ -47,3 +47,5 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 @media(max-width:600px){.payment-scenarios{padding:20px}.scenario-buttons{grid-template-columns:1fr}.scenario-button{height:52px}}
 
 .promo-connect:hover{background-color:#2560d4}
+
+.product-info .price-row{margin-top:16px}

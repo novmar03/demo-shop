@@ -38,7 +38,6 @@ export function productCard(product, quantity) {
     ${productImage(product)}
     <div class="product-info">
       <h3>${product.name}</h3>
-      <p class="product-description">${product.description}</p>
       <div class="price-row"><strong>${money(product.price)}</strong></div>
       <div class="product-controls">
         ${quantity ? `<div class="in-cart"><span class="in-cart-label">В корзине: ${quantity} шт.</span>${quantityControls(product, quantity, { allowRemove: true })}</div>` : `<button type="button" class="button add-button" data-action="add" data-id="${product.id}" aria-label="В корзину: ${product.name}">${icon('cart')}<span>В корзину</span></button>`}

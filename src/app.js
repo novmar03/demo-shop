@@ -3,7 +3,7 @@ import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
 import { products } from './products.js';
 import { STORAGE_KEY, loadCart, saveCart, updateCart, orderSnapshot } from './cart.js';
-import { money, productCount, icon, productImage, quantityControls, productCard } from './ui.js';
+import { money, productCount, icon, productImage, quantityControls, productCard } from './ui.js?v=20261005-1';
 
 const basePath = new URL('../', import.meta.url).pathname;
 const cartPath = `${basePath}cart/`;
@@ -32,8 +32,8 @@ function render({ focusHeading = false } = {}) {
   disposeBlocks();
   disposeBlocks = () => {};
   const order = orderSnapshot(cart);
-  cartLink.innerHTML = `${icon('cart')}<span>Корзина</span>${order.itemCount ? `<span class="cart-count">${order.itemCount}</span>` : ''}`;
-  cartLink.setAttribute('aria-label', `Корзина: ${productCount(order.itemCount)}`);
+  cartLink.innerHTML = `${icon('cart')}<span>Купить</span>${order.itemCount ? `<span class="cart-count">${order.itemCount}</span>` : ''}`;
+  cartLink.setAttribute('aria-label', `Купить — корзина: ${productCount(order.itemCount)}`);
   const pathname = location.pathname.replace(/index\.html$/, '').replace(/\/$/, '');
   const isBlocks = pathname === blocksPath.replace(/\/$/, '');
   const isCheckout = pathname === checkoutPath.replace(/\/$/, '');
@@ -49,7 +49,7 @@ function render({ focusHeading = false } = {}) {
       <p class="promo-mobile-details">Быстрое подключение за 1 ₽ · Прием платежей и фискализация по 54-ФЗ · Платежи по подписке, в том числе через СБП</p>
       <a class="promo-connect" href="https://cloudpayments.ru/" aria-label="Подключить CloudPayments"><span>Подключить</span></a>
     </section>
-    <div class="section-heading"><div><span class="eyebrow section-eyebrow">ДЛЯ РАБОТЫ И ОТДЫХА</span><h2>Выберите своё</h2></div><span class="catalog-count">${productCount(products.length)}</span></div>
+    <div class="section-heading"><div><h2>Каталог</h2></div><span class="catalog-count">${productCount(products.length)}</span></div>
     <section class="catalog" aria-label="Каталог товаров">${products.map(p => productCard(p, cart.find(i => i.id === p.id)?.quantity || 0)).join('')}</section>
     <p class="catalog-note">Демонстрационный каталог. Цены приведены для примера.</p>`;
   } else {
