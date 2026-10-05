@@ -1,5 +1,5 @@
 import { publicId } from './payment.js';
-import { returnHome } from './payment-result.js?v=20261005-1039';
+import { returnHome, rememberPaymentAmount } from './payment-result.js?v=20261005-1705';
 let loading;
 export const checkoutApi = 'https://d5dlit4s64dgke72o1ih.3rspsmhh.apigw.yandexcloud.net';
 let paymentLocked = false;
@@ -97,6 +97,7 @@ export function mountCheckout(form, order) {
       if (disposed) return;
       form.reset();
       if (!order?.items?.length || typeof cryptogram !== 'string' || !cryptogram) throw new Error('Invalid order');
+      rememberPaymentAmount(order.totalAmount);
       paymentLocked = true;
       status.textContent = 'Отправляем платёж…';
       const controller = new AbortController();

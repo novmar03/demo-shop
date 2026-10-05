@@ -1,5 +1,5 @@
-import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1340';
-import { handlePaymentReturn } from './payment-result.js?v=20261005-1039';
+import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1705';
+import { handlePaymentReturn } from './payment-result.js?v=20261005-1705';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
 import { products } from './products.js';
@@ -39,7 +39,7 @@ function render({ focusHeading = false } = {}) {
   const isBlocks = pathname === blocksPath.replace(/\/$/, '');
   const isCheckout = pathname === checkoutPath.replace(/\/$/, '');
   const isCart = isCheckout || isBlocks || pathname === cartPath.replace(/\/$/, '');
-  document.title = isCart ? `${isCheckout ? 'Check-out' : isBlocks ? 'Платежные блоки' : 'Виджет'} — Демо-магазин` : 'Демо-магазин — CloudPayments';
+  document.title = isCart ? `${isCheckout ? 'Checkout' : isBlocks ? 'Платежные блоки' : 'Виджет'} — Демо-магазин` : 'Демо-магазин — CloudPayments';
   if (isCart) cartLink.setAttribute('aria-current', 'page');
   else cartLink.removeAttribute('aria-current');
 
@@ -53,7 +53,7 @@ function render({ focusHeading = false } = {}) {
     <section class="catalog" aria-label="Каталог товаров">${products.map(p => productCard(p, cart.find(i => i.id === p.id)?.quantity || 0)).join('')}</section>
     <p class="catalog-note">Демонстрационный каталог. Цены приведены для примера.</p>`;
   } else {
-    app.innerHTML = `<a class="back" href="${basePath}" data-nav>${icon('arrow')}Продолжить покупки</a><h1 class="cart-title" tabindex="-1">${isCheckout ? 'Check-out' : isBlocks ? 'Платежные блоки' : 'Виджет'} <span>${productCount(order.itemCount)}</span></h1>` + (order.items.length ? `<div class="cart-layout">
+    app.innerHTML = `<a class="back" href="${basePath}" data-nav>${icon('arrow')}Продолжить покупки</a><h1 class="cart-title" tabindex="-1">${isCheckout ? 'Checkout' : isBlocks ? 'Платежные блоки' : 'Виджет'} <span>${productCount(order.itemCount)}</span></h1>` + (order.items.length ? `<div class="cart-layout">
       <section class="cart-items" aria-label="Выбранные товары">${order.items.map(p => `<article class="cart-row" data-product-id="${p.id}">
         ${productImage(p, 'cart-image')}
         <div class="item-details"><h2>${p.name}</h2><p>${money(p.price)} за шт.</p><button type="button" class="remove" data-action="remove" data-id="${p.id}" aria-label="Удалить из корзины: ${p.name}">${icon('trash')}Удалить</button></div>
@@ -62,7 +62,7 @@ function render({ focusHeading = false } = {}) {
       <aside class="summary" aria-labelledby="summary-title"><h2 id="summary-title">Ваш заказ</h2><p class="summary-line"><span>Товары</span><span>${order.itemCount} шт.</span></p><div class="total"><span>Итого</span><strong>${money(order.totalAmount)}</strong></div>${isCheckout ? checkoutForm(order) : isBlocks ? '<div id="payment-blocks" class="payment-blocks"><p role="status">Загружаем способы оплаты…</p></div>' : '<button type="button" class="button pay" data-pay>Оплатить</button>'}<p class="summary-note">Оплата через CloudPayments</p></aside>
     </div>` : `<section class="empty"><span class="empty-icon">${icon('cart')}</span><h2>Ваша корзина пуста</h2><p>Добавьте понравившиеся товары из каталога</p><a href="${basePath}" data-nav class="button">Перейти в каталог</a></section>`);
   }
-  if (isCart) app.insertAdjacentHTML('beforeend', `<nav class="payment-scenarios" aria-label="Платежные сценарии"><h2>Платежные сценарии</h2><div class="scenario-buttons"><a class="button scenario-button" href="${cartPath}" data-nav ${!isBlocks && !isCheckout ? 'aria-current="page"' : ''}>Виджет</a><a class="button scenario-button" href="${blocksPath}" data-nav ${isBlocks ? 'aria-current="page"' : ''}>Платежные блоки</a><a class="button scenario-button" href="${checkoutPath}" data-nav ${isCheckout ? 'aria-current="page"' : ''}>Check-out</a></div></nav>`);
+  if (isCart) app.insertAdjacentHTML('beforeend', `<nav class="payment-scenarios" aria-label="Платежные сценарии"><h2>Платежные сценарии</h2><div class="scenario-buttons"><a class="button scenario-button" href="${cartPath}" data-nav ${!isBlocks && !isCheckout ? 'aria-current="page"' : ''}>Виджет</a><a class="button scenario-button" href="${blocksPath}" data-nav ${isBlocks ? 'aria-current="page"' : ''}>Платежные блоки</a><a class="button scenario-button" href="${checkoutPath}" data-nav ${isCheckout ? 'aria-current="page"' : ''}>Checkout</a></div></nav>`);
   if (isCart) app.querySelector('.cart-title').before(app.querySelector('.payment-scenarios'));
   if (isBlocks && order.items.length) {
     disposeBlocks = mountBlocks(document.querySelector('#payment-blocks'), order, (snapshot, result) => {
