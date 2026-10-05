@@ -73,6 +73,11 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 .checkout-form .pay{max-width:none;margin-top:22px;background:#2e71fc}.checkout-form .pay:hover{background:#2560d4}
 .checkout-status:empty{display:none}.checkout-status{margin-top:12px}
 .checkout-security,.checkout-powered{text-align:center;font-size:11px;color:#8492a8;margin-top:24px}.checkout-powered{margin:12px 0 0}
-.payment-scenarios{margin:0 0 32px}.cart-row{grid-template-columns:72px minmax(0,1fr) 116px 92px;gap:12px;padding:24px 18px}.cart-row .quantity{min-width:0}
+.payment-scenarios{margin:0 0 32px}.cart-row{grid-template-columns:88px minmax(0,1fr) 132px 110px;gap:16px;padding:24px}.cart-row .quantity{min-width:132px;width:132px;gap:0}.cart-row .quantity button{width:44px;flex:0 0 44px}.cart-row .quantity-value{min-width:24px}
 @media(max-width:1000px){.cart-layout,.cart-layout:has(.payment-blocks){grid-template-columns:minmax(0,1fr) 360px}.cart-row{grid-template-columns:60px minmax(0,1fr);gap:12px}.cart-row .quantity{grid-column:2;grid-row:2;max-width:132px}.cart-row .subtotal{grid-column:2;grid-row:3;text-align:left}}
 @media(max-width:760px){.cart-layout,.cart-layout:has(.payment-blocks){grid-template-columns:minmax(0,1fr)}.summary{width:100%;max-width:none}.checkout-form{padding:8px 0 0;max-width:440px;width:100%;justify-self:center}.summary .pay{max-width:none}}
+.checkout-cvv input{padding-right:14px}
+.checkout-security-logos{display:block;width:100%;height:auto;margin-top:28px}
+.cart-row .cart-image{width:88px;height:96px;padding:8px}
+@media(max-width:1000px){.cart-row{grid-template-columns:88px minmax(0,1fr)}}
+@media(max-width:600px){.cart-row{padding:18px;gap:14px;grid-template-columns:60px minmax(0,1fr)}.cart-row .cart-image{width:60px;height:72px;padding:6px}}

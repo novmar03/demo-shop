@@ -1,4 +1,4 @@
-import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1320';
+import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1340';
 import { handlePaymentReturn } from './payment-result.js?v=20261005-1039';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';

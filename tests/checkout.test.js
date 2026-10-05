@@ -6,6 +6,7 @@ test('checkout form keeps card fields out of normal form submission', () => {
   const html = checkoutForm(orderSnapshot([{ id: 1, quantity: 2 }]));
   assert.equal((html.match(/data-cp=/g) || []).length, 4);
   assert.doesNotMatch(html, /\sname=/);
+  assert.doesNotMatch(html, /data-cardholder|data-preview-name|data-cp="name"|<small>123/);
   assert.match(html, /maxlength="3" pattern="\[0-9\]\{3\}"/);
 });
 test('checkout submits minimal payload, blocks double clicks and handles decline', async () => {
@@ -13,8 +14,8 @@ test('checkout submits minimal payload, blocks double clicks and handles decline
   const button = {}; const status = {};
   const form = { addEventListener(type, fn) { if (type === 'submit') submit = fn; }, removeEventListener() {}, reportValidity: () => true, reset() { resets++; }, querySelector: s => s === 'button' ? button : s === '.checkout-status' ? status : { value: s === '[data-cardholder]' ? '' : '123' } };
   globalThis.window = { cp: { Checkout: class {
-    constructor(options) { assert.equal(options.container, undefined); }
-    async createPaymentCryptogram(values) { assert.equal('name' in values, false); calls++; return 'mock-cryptogram'; }
+    constructor(options) { assert.equal(options.container, form); }
+    async createPaymentCryptogram(values) { assert.equal(values, undefined); calls++; return 'mock-cryptogram'; }
   } } };
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url, options) => {

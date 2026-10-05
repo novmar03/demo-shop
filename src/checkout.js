@@ -27,13 +27,12 @@ export function checkoutForm() {
     <div class="checkout-fields">
       <input aria-label="Месяц" type="text" inputmode="numeric" data-cp="expDateMonth" maxlength="2" pattern="0[1-9]|1[0-2]" placeholder="ММ" required><span aria-hidden="true">/</span>
       <input aria-label="Год" type="text" inputmode="numeric" data-cp="expDateYear" maxlength="2" pattern="[0-9]{2}" placeholder="ГГ" required>
-      <div class="checkout-cvv"><input aria-label="CVV/CVC — 3 цифры" type="password" inputmode="numeric" data-cp="cvv" maxlength="3" pattern="[0-9]{3}" placeholder="CVC / CVV2" required><span aria-hidden="true">▰ <small>123</small></span></div>
+      <div class="checkout-cvv"><input aria-label="CVV/CVC — 3 цифры" type="password" inputmode="numeric" data-cp="cvv" maxlength="3" pattern="[0-9]{3}" placeholder="CVC / CVV2" required></div>
     </div>
-    <input aria-label="Имя владельца карты (необязательно)" type="text" data-cardholder maxlength="100" placeholder="Имя владельца (необязательно)">
-    <div class="checkout-preview" aria-hidden="true"><div class="checkout-preview-number">**** &nbsp; **** &nbsp; **** &nbsp; <span data-preview-last>0000</span></div><strong data-preview-name>Имя владельца</strong><div class="checkout-preview-expiry">Действует до<br><span data-preview-expiry>ММ/ГГ</span></div></div>
+    <div class="checkout-preview" aria-hidden="true"><div class="checkout-preview-number">**** &nbsp; **** &nbsp; **** &nbsp; <span data-preview-last>0000</span></div><div class="checkout-preview-expiry">Действует до<br><span data-preview-expiry>ММ/ГГ</span></div></div>
     <button class="button pay" type="submit">Оплатить</button>
     <p class="checkout-status" role="status" aria-live="polite"></p>
-    <p class="checkout-security">♙ &nbsp; Защищённое соединение</p><p class="checkout-powered">Secured by <strong>CloudPayments</strong></p>
+    <img class="checkout-security-logos" src="${new URL('../public/brand/payment-security.svg', import.meta.url).pathname}" alt="Безопасное соединение, Verified by VISA, Mastercard SecureCode, МИР Accept, PCI DSS"><p class="checkout-powered">Secured by <strong>CloudPayments</strong></p>
   </form>`;
 }
 export function formatCardNumber(value) {
@@ -41,9 +40,8 @@ export function formatCardNumber(value) {
 }
 export function cardValues(form) {
   const read = key => form.querySelector('[data-cp="' + key + '"]').value.trim();
-  const name = form.querySelector('[data-cardholder]').value.trim();
   return { cardNumber: read('cardNumber'), expDateMonth: read('expDateMonth'),
-    expDateYear: read('expDateYear'), cvv: read('cvv'), ...(name ? { name } : {}) };
+    expDateYear: read('expDateYear'), cvv: read('cvv') };
 }
 function loadCheckout() {
   if (window.cp?.Checkout) return Promise.resolve(window.cp.Checkout);
@@ -79,7 +77,6 @@ export function mountCheckout(form, order) {
     }
     const values = cardValues(form);
     form.querySelector('[data-preview-last]').textContent = values.cardNumber.replace(/\D/g, '').slice(-4) || '0000';
-    form.querySelector('[data-preview-name]').textContent = values.name || 'Имя владельца';
     form.querySelector('[data-preview-expiry]').textContent = (values.expDateMonth || 'ММ') + '/' + (values.expDateYear || 'ГГ');
   };
   form.addEventListener('input', updateFields);
@@ -94,9 +91,9 @@ export function mountCheckout(form, order) {
     try {
       const Checkout = await loadCheckout();
       if (disposed) return;
-      const checkout = new Checkout({ publicId });
+      const checkout = new Checkout({ publicId, container: form });
       // Never log, persist, expose or reuse the cryptogram or card fields.
-      let cryptogram = await checkout.createPaymentCryptogram(cardValues(form));
+      let cryptogram = await checkout.createPaymentCryptogram();
       if (disposed) return;
       form.reset();
       if (!order?.items?.length || typeof cryptogram !== 'string' || !cryptogram) throw new Error('Invalid order');
