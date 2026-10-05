@@ -93,3 +93,9 @@ main > .promo + .section-heading{margin-top:24px}
 }
 body:has(main > .promo) .site-footer.cp-footer{margin-top:0;padding-top:28px}
 main > .catalog-note{margin-top:16px}
+
+/* Compact spacing around all payment scenarios, including an empty cart. */
+body:has(main > .cart-title) .site-header{margin-bottom:0;padding-bottom:16px}
+main:has(> .cart-title){padding-top:0;padding-bottom:24px}
+main:has(> .cart-title) > .back{margin-top:0}
+body:has(main > .cart-title) .site-footer.cp-footer{margin-top:0;padding-top:28px}
