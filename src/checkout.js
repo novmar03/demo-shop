@@ -1,6 +1,6 @@
 import { publicId } from './payment.js';
 import { money } from './ui.js';
-import { returnHome } from './payment-result.js';
+import { returnHome } from './payment-result.js?v=20261005-1039';
 let loading;
 export const checkoutApi = 'https://d5dlit4s64dgke72o1ih.3rspsmhh.apigw.yandexcloud.net';
 let paymentLocked = false;

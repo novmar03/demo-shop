@@ -1,5 +1,5 @@
-import { checkoutForm, mountCheckout } from './checkout.js';
-import { handlePaymentReturn } from './payment-result.js';
+import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1039';
+import { handlePaymentReturn } from './payment-result.js?v=20261005-1039';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
 import { products } from './products.js';
