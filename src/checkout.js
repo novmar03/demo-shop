@@ -1,5 +1,6 @@
 import { publicId } from './payment.js';
 import { money } from './ui.js';
+import { returnHome } from './payment-result.js';
 let loading;
 export const checkoutApi = 'https://d5dlit4s64dgke72o1ih.3rspsmhh.apigw.yandexcloud.net';
 let paymentLocked = false;
@@ -49,11 +50,6 @@ export function mountCheckout(form, order) {
   let pending = false;
   const button = form.querySelector('button');
   const status = form.querySelector('.checkout-status');
-  const returned = new URLSearchParams(window.location?.search || '').get('payment');
-  if (returned === 'success' || returned === 'failed') {
-    paymentLocked = true;
-    status.textContent = 'Вы вернулись после подтверждения в банке. Проверьте результат платежа в CloudPayments перед повторной оплатой.';
-  }
   button.disabled = paymentLocked;
   const submit = async event => {
     event.preventDefault();
@@ -90,14 +86,15 @@ export function mountCheckout(form, order) {
       } finally { clearTimeout(timer); cryptogram = null; }
       if (result.success === false && result.status === 'declined') {
         paymentLocked = false;
-        if (!disposed) status.textContent = typeof result.message === 'string' ? result.message : 'Платёж отклонён. Попробуйте другую карту.';
+        returnHome('failed');
       } else if (result.success === true && result.status === 'paid') {
-        if (!disposed) status.textContent = 'CloudPayments подтвердил оплату. Спасибо!';
+        returnHome('success');
       } else if (result.success === true && result.status === 'requires3ds') {
         if (!disposed) status.textContent = 'Переходим на страницу банка для подтверждения…';
         redirectToBank(result);
       } else throw new Error('Unexpected payment response');
     } catch {
+      if (paymentLocked) { returnHome('unknown'); return; }
       if (!disposed) status.textContent = paymentLocked
         ? 'Результат платежа не подтверждён. Не оплачивайте повторно: сначала проверьте операцию в CloudPayments.'
         : 'Не удалось подготовить платёж. Проверьте реквизиты карты и повторите попытку.';

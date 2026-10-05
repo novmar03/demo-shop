@@ -1,4 +1,5 @@
 import { checkoutForm, mountCheckout } from './checkout.js';
+import { handlePaymentReturn } from './payment-result.js';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
 import { products } from './products.js';
@@ -132,3 +133,4 @@ window.addEventListener('storage', event => {
   }
 });
 render();
+handlePaymentReturn();
