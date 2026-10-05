@@ -81,3 +81,15 @@ main{max-width:1280px;margin:auto;padding:8px 40px 56px}.promo{min-height:220px;
 .cart-row .cart-image{width:88px;height:96px;padding:8px}
 @media(max-width:1000px){.cart-row{grid-template-columns:88px minmax(0,1fr)}}
 @media(max-width:600px){.cart-row{padding:18px;gap:14px;grid-template-columns:60px minmax(0,1fr)}.cart-row .cart-image{width:60px;height:72px;padding:6px}}
+
+/* Align the visible artwork, excluding its embedded white border. */
+body:has(main > .promo) .site-header{margin-bottom:0;padding-bottom:24px}
+main:has(> .promo){padding-top:0;padding-bottom:16px}
+main > .promo{width:100%;margin:0}
+main > .promo + .section-heading{margin-top:24px}
+@media(min-width:701px){
+ main > .promo{aspect-ratio:1956/681;background-size:104.7035% 112.7753%;background-position:50% 51.724%;border-radius:16px}
+ main > .promo .promo-connect{left:5.918%;top:78.99%;width:13.716%;height:11.278%}
+}
+body:has(main > .promo) .site-footer.cp-footer{margin-top:0;padding-top:28px}
+main > .catalog-note{margin-top:16px}
