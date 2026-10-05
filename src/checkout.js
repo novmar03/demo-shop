@@ -1,5 +1,4 @@
 import { publicId } from './payment.js';
-import { money } from './ui.js';
 import { returnHome } from './payment-result.js?v=20261005-1039';
 let loading;
 export const checkoutApi = 'https://d5dlit4s64dgke72o1ih.3rspsmhh.apigw.yandexcloud.net';
@@ -22,13 +21,29 @@ export function redirectToBank(result, doc = document) {
   doc.body.append(redirect);
   redirect.submit();
 }
-export function checkoutForm(order) {
-  return renderCheckoutForm(order)
-    .replace('Демонстрация Checkout: проверка карты и создание криптограммы. Проведение платежа пока не подключено.', 'Данные карты защищены CloudPayments. Подтверждение оплаты может потребоваться на странице банка.')
-    .replace('Проверить Checkout', 'Оплатить');
+export function checkoutForm() {
+  return `<form id="checkout-form" class="checkout-form" autocomplete="off" aria-label="Оплата картой">
+    <input aria-label="Номер карты" type="text" inputmode="numeric" data-cp="cardNumber" maxlength="23" pattern="[0-9 ]{18,23}" placeholder="Номер карты" required>
+    <div class="checkout-fields">
+      <input aria-label="Месяц" type="text" inputmode="numeric" data-cp="expDateMonth" maxlength="2" pattern="0[1-9]|1[0-2]" placeholder="ММ" required><span aria-hidden="true">/</span>
+      <input aria-label="Год" type="text" inputmode="numeric" data-cp="expDateYear" maxlength="2" pattern="[0-9]{2}" placeholder="ГГ" required>
+      <div class="checkout-cvv"><input aria-label="CVV/CVC — 3 цифры" type="password" inputmode="numeric" data-cp="cvv" maxlength="3" pattern="[0-9]{3}" placeholder="CVC / CVV2" required><span aria-hidden="true">▰ <small>123</small></span></div>
+    </div>
+    <input aria-label="Имя владельца карты (необязательно)" type="text" data-cardholder maxlength="100" placeholder="Имя владельца (необязательно)">
+    <div class="checkout-preview" aria-hidden="true"><div class="checkout-preview-number">**** &nbsp; **** &nbsp; **** &nbsp; <span data-preview-last>0000</span></div><strong data-preview-name>Имя владельца</strong><div class="checkout-preview-expiry">Действует до<br><span data-preview-expiry>ММ/ГГ</span></div></div>
+    <button class="button pay" type="submit">Оплатить</button>
+    <p class="checkout-status" role="status" aria-live="polite"></p>
+    <p class="checkout-security">♙ &nbsp; Защищённое соединение</p><p class="checkout-powered">Secured by <strong>CloudPayments</strong></p>
+  </form>`;
 }
-function renderCheckoutForm(order) {
-  return `<form id="checkout-form" class="checkout-form" autocomplete="off"><h3>Оплата картой</h3><p class="checkout-note">Демонстрация Checkout: проверка карты и создание криптограммы. Проведение платежа пока не подключено.</p><label>Номер карты<input type="text" inputmode="numeric" data-cp="cardNumber" minlength="16" maxlength="23" pattern="[0-9 ]{16,23}" placeholder="0000 0000 0000 0000" required></label><div class="checkout-fields"><label>Месяц<input type="text" inputmode="numeric" data-cp="expDateMonth" maxlength="2" pattern="0[1-9]|1[0-2]" placeholder="ММ" required></label><label>Год<input type="text" inputmode="numeric" data-cp="expDateYear" minlength="2" maxlength="2" pattern="[0-9]{2}" placeholder="ГГ" required></label><label>CVV/CVC<input type="password" inputmode="numeric" data-cp="cvv" minlength="3" maxlength="4" pattern="[0-9]{3,4}" placeholder="•••" required></label></div><label>Имя владельца карты<input type="text" data-cp="name" maxlength="100" placeholder="Как на карте (необязательно)"></label><p>Сумма заказа: <strong>${money(order.totalAmount)}</strong></p><button class="button pay" type="submit">Проверить Checkout</button><p class="checkout-status" role="status" aria-live="polite"></p></form>`;
+export function formatCardNumber(value) {
+  return value.replace(/\D/g, '').slice(0, 19).replace(/(.{4})/g, '$1 ').trim();
+}
+export function cardValues(form) {
+  const read = key => form.querySelector('[data-cp="' + key + '"]').value.trim();
+  const name = form.querySelector('[data-cardholder]').value.trim();
+  return { cardNumber: read('cardNumber'), expDateMonth: read('expDateMonth'),
+    expDateYear: read('expDateYear'), cvv: read('cvv'), ...(name ? { name } : {}) };
 }
 function loadCheckout() {
   if (window.cp?.Checkout) return Promise.resolve(window.cp.Checkout);
@@ -51,6 +66,23 @@ export function mountCheckout(form, order) {
   const button = form.querySelector('button');
   const status = form.querySelector('.checkout-status');
   button.disabled = paymentLocked;
+  const updateFields = event => {
+    const field = event.target;
+    const kind = field.dataset.cp;
+    if (kind) {
+      const digitsBefore = field.value.slice(0, field.selectionStart ?? field.value.length).replace(/\D/g, '').length;
+      field.value = kind === 'cardNumber' ? formatCardNumber(field.value) : field.value.replace(/\D/g, '').slice(0, kind === 'cvv' ? 3 : 2);
+      if (kind === 'cardNumber') {
+        const position = Math.min(field.value.length, digitsBefore + Math.floor(Math.max(0, digitsBefore - 1) / 4));
+        field.setSelectionRange(position, position);
+      }
+    }
+    const values = cardValues(form);
+    form.querySelector('[data-preview-last]').textContent = values.cardNumber.replace(/\D/g, '').slice(-4) || '0000';
+    form.querySelector('[data-preview-name]').textContent = values.name || 'Имя владельца';
+    form.querySelector('[data-preview-expiry]').textContent = (values.expDateMonth || 'ММ') + '/' + (values.expDateYear || 'ГГ');
+  };
+  form.addEventListener('input', updateFields);
   const submit = async event => {
     event.preventDefault();
     if (pending || paymentLocked || disposed || !form.reportValidity()) return;
@@ -62,9 +94,9 @@ export function mountCheckout(form, order) {
     try {
       const Checkout = await loadCheckout();
       if (disposed) return;
-      const checkout = new Checkout({ publicId, container: form });
+      const checkout = new Checkout({ publicId });
       // Never log, persist, expose or reuse the cryptogram or card fields.
-      let cryptogram = await checkout.createPaymentCryptogram();
+      let cryptogram = await checkout.createPaymentCryptogram(cardValues(form));
       if (disposed) return;
       form.reset();
       if (!order?.items?.length || typeof cryptogram !== 'string' || !cryptogram) throw new Error('Invalid order');
@@ -104,5 +136,5 @@ export function mountCheckout(form, order) {
     }
   };
   form.addEventListener('submit', submit);
-  return () => { disposed = true; form.reset(); form.removeEventListener('submit', submit); };
+  return () => { disposed = true; form.reset(); form.removeEventListener('submit', submit); form.removeEventListener('input', updateFields); };
 }

@@ -1,4 +1,4 @@
-import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1039';
+import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1320';
 import { handlePaymentReturn } from './payment-result.js?v=20261005-1039';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
@@ -63,6 +63,7 @@ function render({ focusHeading = false } = {}) {
     </div>` : `<section class="empty"><span class="empty-icon">${icon('cart')}</span><h2>Ваша корзина пуста</h2><p>Добавьте понравившиеся товары из каталога</p><a href="${basePath}" data-nav class="button">Перейти в каталог</a></section>`);
   }
   if (isCart) app.insertAdjacentHTML('beforeend', `<nav class="payment-scenarios" aria-label="Платежные сценарии"><h2>Платежные сценарии</h2><div class="scenario-buttons"><a class="button scenario-button" href="${cartPath}" data-nav ${!isBlocks && !isCheckout ? 'aria-current="page"' : ''}>Виджет</a><a class="button scenario-button" href="${blocksPath}" data-nav ${isBlocks ? 'aria-current="page"' : ''}>Платежные блоки</a><a class="button scenario-button" href="${checkoutPath}" data-nav ${isCheckout ? 'aria-current="page"' : ''}>Check-out</a></div></nav>`);
+  if (isCart) app.querySelector('.cart-title').before(app.querySelector('.payment-scenarios'));
   if (isBlocks && order.items.length) {
     disposeBlocks = mountBlocks(document.querySelector('#payment-blocks'), order, (snapshot, result) => {
       window.dispatchEvent(new CustomEvent('demo-store:payment-result', { detail: { order: snapshot, result } }));

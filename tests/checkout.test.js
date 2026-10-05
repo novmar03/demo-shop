@@ -1,20 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { checkoutForm, mountCheckout, redirectToBank, checkoutApi } from '../src/checkout.js';
+import { checkoutForm, mountCheckout, redirectToBank, checkoutApi, formatCardNumber, cardValues } from '../src/checkout.js';
 import { orderSnapshot } from '../src/cart.js';
 test('checkout form keeps card fields out of normal form submission', () => {
   const html = checkoutForm(orderSnapshot([{ id: 1, quantity: 2 }]));
-  assert.equal((html.match(/data-cp=/g) || []).length, 5);
+  assert.equal((html.match(/data-cp=/g) || []).length, 4);
   assert.doesNotMatch(html, /\sname=/);
-  assert.match(html, /49\s980/);
+  assert.match(html, /maxlength="3" pattern="\[0-9\]\{3\}"/);
 });
 test('checkout submits minimal payload, blocks double clicks and handles decline', async () => {
   let submit; let resets = 0; let calls = 0;
   const button = {}; const status = {};
-  const form = { addEventListener(_, fn) { submit = fn; }, removeEventListener() {}, reportValidity: () => true, reset() { resets++; }, querySelector: s => s === 'button' ? button : status };
+  const form = { addEventListener(type, fn) { if (type === 'submit') submit = fn; }, removeEventListener() {}, reportValidity: () => true, reset() { resets++; }, querySelector: s => s === 'button' ? button : s === '.checkout-status' ? status : { value: s === '[data-cardholder]' ? '' : '123' } };
   globalThis.window = { cp: { Checkout: class {
-    constructor(options) { assert.equal(options.container, form); }
-    async createPaymentCryptogram() { calls++; return 'mock-cryptogram'; }
+    constructor(options) { assert.equal(options.container, undefined); }
+    async createPaymentCryptogram(values) { assert.equal('name' in values, false); calls++; return 'mock-cryptogram'; }
   } } };
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url, options) => {
@@ -30,6 +30,12 @@ test('checkout submits minimal payload, blocks double clicks and handles decline
   assert.ok(destination.endsWith('/?payment=failed'));
   assert.equal(button.disabled, false);
   dispose(); delete globalThis.window; globalThis.fetch = originalFetch;
+});
+test('card formatting strips non-digits and caps at nineteen digits', () => {
+  assert.equal(formatCardNumber('4242424242424242'), '4242 4242 4242 4242');
+  assert.equal(formatCardNumber('1234x5678901234567890123'), '1234 5678 9012 3456 789');
+  const form = { querySelector: s => ({ value: s === '[data-cardholder]' ? '   ' : '12' }) };
+  assert.equal('name' in cardValues(form), false);
 });
 test('3DS posts exact case-sensitive fields and rejects unsafe URLs', () => {
   let submitted = false; let mounted;
