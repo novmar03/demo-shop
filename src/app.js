@@ -68,7 +68,7 @@ function render({ focusHeading = false } = {}) {
       toast(result.status === 'success' ? 'CloudPayments сообщает об успешной оплате.' : 'Оплата не завершена. Попробуйте ещё раз.');
     });
   }
-  if (isCheckout && order.items.length) disposeBlocks = mountCheckout(document.querySelector('#checkout-form'));
+  if (isCheckout && order.items.length) disposeBlocks = mountCheckout(document.querySelector('#checkout-form'), order);
   if (focusHeading) app.querySelector('h1')?.focus({ preventScroll: true });
 }
 
