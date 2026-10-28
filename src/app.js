@@ -1,3 +1,4 @@
+import { mountStudy } from './study.js?v=20261028-study';
 import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1705';
 import { handlePaymentReturn } from './payment-result.js?v=20261028-cart-clear';
 import { mountBlocks } from './blocks.js';
@@ -13,6 +14,7 @@ const checkoutPath = `${basePath}checkout/`;
 const blocksPath = `${basePath}payment-blocks/`;
 let disposeBlocks = () => {};
 let disposeLanding = () => {};
+let disposeStudy = () => {};
 const app = document.querySelector('#app');
 const cartLink = document.querySelector('#cart-link');
 document.querySelector('.brand').href = basePath;
@@ -45,6 +47,8 @@ function toast(message) {
 }
 
 function render({ focusHeading = false } = {}) {
+  disposeStudy();
+  disposeStudy = () => {};
   disposeLanding();
   disposeLanding = () => {};
   disposeBlocks();
@@ -81,6 +85,7 @@ function render({ focusHeading = false } = {}) {
   }
   if (isCart) app.insertAdjacentHTML('beforeend', `<nav class="payment-scenarios" aria-label="Платежные сценарии"><h2>Платежные сценарии</h2><div class="scenario-buttons"><a class="button scenario-button" href="${cartPath}" data-nav ${!isBlocks && !isCheckout ? 'aria-current="page"' : ''}>Виджет</a><a class="button scenario-button" href="${blocksPath}" data-nav ${isBlocks ? 'aria-current="page"' : ''}>Платежные блоки</a><a class="button scenario-button" href="${checkoutPath}" data-nav ${isCheckout ? 'aria-current="page"' : ''}>Checkout</a></div></nav>`);
   if (isCart) app.querySelector('.cart-title').before(app.querySelector('.payment-scenarios'));
+  if (isCart) disposeStudy = mountStudy(document.querySelector('.site-header'), app.querySelector('.payment-scenarios'));
   if (isBlocks && order.items.length) {
     disposeBlocks = mountBlocks(document.querySelector('#payment-blocks'), order, (snapshot, result) => {
       window.dispatchEvent(new CustomEvent('demo-store:payment-result', { detail: { order: snapshot, result } }));
