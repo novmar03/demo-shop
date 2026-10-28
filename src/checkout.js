@@ -32,7 +32,7 @@ export function checkoutForm() {
     <div class="checkout-preview" aria-hidden="true"><div class="checkout-preview-number">**** &nbsp; **** &nbsp; **** &nbsp; <span data-preview-last>0000</span></div><div class="checkout-preview-expiry">Действует до<br><span data-preview-expiry>ММ/ГГ</span></div></div>
     <button class="button pay" type="submit">Оплатить</button>
     <p class="checkout-status" role="status" aria-live="polite"></p>
-    <img class="checkout-security-logos" src="${new URL('../public/brand/payment-security.svg', import.meta.url).pathname}" alt="Безопасное соединение, Verified by VISA, Mastercard SecureCode, МИР Accept, PCI DSS"><p class="checkout-powered">Secured by <strong>CloudPayments</strong></p>
+
   </form>`;
 }
 export function formatCardNumber(value) {
