@@ -37,6 +37,7 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
 .landing-benefit{height:250px;border-radius:20px;background:#f0f2f5;padding:18px}
 .landing-benefit img{width:40px;height:40px;margin-bottom:46px}
 .landing-benefit h2{max-width:236px;font-size:18px;line-height:20px;font-weight:500;margin:0 0 8px}
+.landing-benefit:last-child h2{max-width:209px}
 .landing-benefit p{font-size:14px;line-height:20px;font-weight:300}
 .landing-shop{padding:112px 0 112px;background:#f0f2f5}
 .landing-catalog-intro{margin-bottom:36px}
@@ -48,7 +49,7 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
 .landing .image-frame{max-width:100%;min-height:0}
 .landing .image-part{height:auto;max-width:100%;width:100%}
 .landing .product-info{padding:18px;min-height:182px}
-.landing .product h3{min-height:39.2px;font-size:14px;line-height:19.6px;letter-spacing:0;font-weight:300}
+.landing .product h3{min-height:19.6px;font-size:14px;line-height:19.6px;letter-spacing:0;font-weight:300}
 .landing .price-row{margin:12px 0 20px}
 .landing .price-row strong{font-family:LandingStolzl,Arial,sans-serif;font-size:32px;line-height:36.8px;color:#0b1e46;font-weight:400}
 .landing .product-controls{height:50px;margin-top:auto;margin-bottom:8px}
@@ -102,7 +103,7 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
  .landing-benefits{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
  .landing-benefit{height:220px}.landing-benefit img{margin-bottom:20px}
  .landing .catalog{grid-template-columns:repeat(2,minmax(0,1fr))}
- .landing-about-card{height:487px}.landing-about h2{font-size:28px;line-height:32px;left:22px;max-width:calc(100% - 44px)}
+ .landing-about-card{height:487px}.landing-about h2{font-size:24px;line-height:26px;left:22px;max-width:calc(100% - 44px)}
  .landing-about-badge{left:22px}.landing-about p{left:22px;top:118px;width:327px}
  .landing-about-button{left:22px;top:238px}
  .landing-about-art{width:calc(100% - 44px);right:22px}.landing-money{width:185px;right:14px;top:65px}
@@ -127,7 +128,7 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
  .landing-benefits{grid-template-columns:1fr;gap:16px}
  .landing-benefit{height:auto;min-height:168px;padding:16px}
  .landing-benefit img{width:30px;height:30px;margin-bottom:24px}
- .landing-benefit h2{font-size:16px;line-height:20px;max-width:none;margin-bottom:5px}
+ .landing-benefit h2,.landing-benefit:last-child h2{font-size:16px;line-height:20px;max-width:none;margin-bottom:5px}
  .landing-benefit p{font-size:12px;line-height:17px}
  .landing-shop{padding:82px 0 75px}.landing-catalog-intro{margin-bottom:32px}
  .landing-catalog-intro h2{font-size:28px;line-height:31px;max-width:347px}
@@ -140,20 +141,21 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
  .landing .quantity{height:40px;min-height:40px}.landing .in-cart{height:40px}.landing .quantity button{width:32px;height:38px}.landing .quantity-value{font-size:14px;min-width:20px}.landing .quantity{gap:0}.landing .in-cart-label{bottom:42px;font-size:9px}
  .landing-catalog-note{font-size:12px;line-height:17px;margin-top:30px}
  .landing-about{padding:85px 0 75px}.landing-about-card{height:537px}
- .landing-about h2{font-size:24px;line-height:28px;left:20px;max-width:calc(100% - 40px);top:54px}
- .landing-about-badge{left:20px}.landing-about p{left:20px;top:150px;width:calc(100% - 40px);font-size:12px;line-height:17px}
+ .landing-about h2{font-size:24px;line-height:26px;left:20px;max-width:calc(100% - 40px);top:54px}
+ .landing-about-badge{left:20px}.landing-about p{left:20px;top:174px;width:calc(100% - 40px);font-size:12px;line-height:17px}
  .landing-about-art{left:20px;right:auto;bottom:84px;width:calc(100% - 40px)}
  .landing-money{width:119px;right:0;top:258px}.landing-about-button{left:20px;right:20px;width:auto;top:auto;bottom:20px}
  .landing-footer{height:75px;line-height:20px;font-size:12px}.landing-footer img{width:132px}
  .is-landing #cart-link{right:20px;bottom:20px;width:56px;height:56px;padding:15px}
 }
 @media(max-width:479px){
- .landing-hero{height:766px}.landing-hero h1{font-size:28px;line-height:31px;left:20px;width:calc(100% - 40px)}
+ .landing-hero{height:766px}.landing-hero h1{font-size:26px;line-height:29px;left:20px;width:calc(100% - 40px)}
  .landing-hero-description{top:215px;left:20px;width:calc(100% - 40px)}
  .landing-hero-button{top:308px;left:20px;right:20px;width:auto}
  .landing-phone-panel{top:379px;left:0;right:0;height:397px}
  .landing-phone{width:310px;max-width:100%;top:10px;left:50%;margin-left:0;translate:-50% 0}
  .landing-catalog-intro h2{font-size:26px;line-height:29px}
+ .landing-about h2{font-size:18px;line-height:20px}.landing-about p{top:150px}
  .landing .catalog{grid-template-columns:minmax(0,1fr)}
  .landing .product-image{aspect-ratio:100/110;padding:24px}
  .landing .product-info{padding:18px;min-height:182px}.landing .product h3{font-size:14px;line-height:20px;min-height:20px}
