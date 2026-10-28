@@ -17,3 +17,5 @@
 
 /* Static scenario labels retain the basket button appearance. */
 .study-scenario-label{background:#fff;color:#2e71fc;border-color:#2e71fc}.study-card h4{font-size:16px;line-height:1.5;margin-bottom:14px}
+
+.study-more{display:flex;justify-content:flex-end;margin-top:40px;padding:0 20px 16px}.study-more a{color:#2e71fc;font-size:14px;text-decoration:underline;text-underline-offset:4px}.study-more a:hover{color:#2560d4}.study-more a:focus-visible{outline:2px solid #2e71fc;outline-offset:6px}.study-more span{margin-left:6px}
