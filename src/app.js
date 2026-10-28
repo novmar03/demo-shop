@@ -1,4 +1,4 @@
-import { mountStudy } from './study.js?v=20261028-study-v3';
+import { mountStudy } from './study.js?v=20261028-study-v4';
 import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1705';
 import { handlePaymentReturn } from './payment-result.js?v=20261028-cart-clear';
 import { mountBlocks } from './blocks.js';
