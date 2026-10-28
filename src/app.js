@@ -1,6 +1,6 @@
 import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1705';
 import { handlePaymentReturn } from './payment-result.js?v=20261005-1705';
-import { mountBlocks } from './blocks.js?v=20261028-terminal';
+import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js?v=20261028-classic';
 import { products } from './products.js?v=20261028-merch';
 import { landingPage, mountLanding, landingLogo, applicationUrl } from './landing.js?v=20261028-merch';
@@ -25,6 +25,11 @@ try { storage = window.localStorage; } catch {}
 let cart = loadCart(storage);
 let toastTimer;
 let paymentPending = false;
+
+function clearCart() {
+  cart = [];
+  saveCart(storage, cart);
+}
 
 function updateCartLink(order) {
   cartLink.innerHTML = `${icon('cart')}<span>Купить</span>${order.itemCount ? `<span class="cart-count">${order.itemCount}</span>` : ''}`;
@@ -80,6 +85,10 @@ function render({ focusHeading = false } = {}) {
     disposeBlocks = mountBlocks(document.querySelector('#payment-blocks'), order, (snapshot, result) => {
       window.dispatchEvent(new CustomEvent('demo-store:payment-result', { detail: { order: snapshot, result } }));
       toast(result.status === 'success' ? 'CloudPayments сообщает об успешной оплате.' : 'Оплата не завершена. Попробуйте ещё раз.');
+      if (result.status === 'success') {
+        clearCart();
+        render();
+      }
     });
   }
   if (isCheckout && order.items.length) disposeBlocks = mountCheckout(document.querySelector('#checkout-form'), order);
@@ -116,8 +125,11 @@ document.addEventListener('click', async event => {
     const product = products.find(p => p.id === id);
     const quantity = cart.find(p => p.id === id)?.quantity || 0;
     if (document.body.classList.contains('is-landing')) {
-      // Preserve scroll, typing and already-revealed elements when changing quantity.
-      app.querySelector(`.product[data-product-id="${id}"]`).outerHTML = productCard(product, quantity);
+      // Keep the existing artwork mounted so adding an item cannot flash or reload it.
+      const card = app.querySelector(`.product[data-product-id="${id}"]`);
+      const template = document.createElement('template');
+      template.innerHTML = productCard(product, quantity);
+      card.querySelector('.product-controls').replaceWith(template.content.querySelector('.product-controls'));
       updateCartLink(orderSnapshot(cart));
     } else render();
     const target = app.querySelector(`[data-action="${kind}"][data-id="${id}"]:not(:disabled)`)
@@ -138,7 +150,11 @@ document.addEventListener('click', async event => {
     try {
       const result = await openPayment(order);
       window.dispatchEvent(new CustomEvent('demo-store:payment-result', { detail: { order, result } }));
-      if (result?.status === 'success') toast('CloudPayments сообщает об успешной оплате.');
+      if (result?.status === 'success') {
+        clearCart();
+        render();
+        toast('CloudPayments сообщает об успешной оплате.');
+      }
       else if (result?.type === 'cancel') toast('Форма оплаты закрыта. Корзина сохранена.');
       else if (result?.type === 'error' || result?.status === 'fail') toast('Оплата не завершена. Попробуйте ещё раз.');
     } catch {
@@ -172,4 +188,7 @@ render();
 if (location.hash === '#demo-shop' || location.hash === '#about') {
   requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView());
 }
-handlePaymentReturn();
+if (handlePaymentReturn() === 'success') {
+  clearCart();
+  render();
+}
