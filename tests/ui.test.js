@@ -37,13 +37,14 @@ test('Восемь товаров с фотографиями, описание�
 });
 
 test('Главная и корзина сохраняют пути GitHub Pages и русские метаданные', () => {
-  for (const file of ['index.html', 'cart/index.html']) {
+  for (const file of ['index.html', 'cart/index.html', 'checkout/index.html', 'payment-blocks/index.html']) {
     const html = readFileSync(file, 'utf8');
     assert.match(html, /lang="ru"/);
     assert.match(html, /rel="icon"/);
     const base = new URL(file, 'https://novmar03.github.io/demo-shop/');
     for (const [,relative] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
       const url = new URL(relative, base);
+      if (url.origin !== base.origin) continue; // External footer/contact links are intentional.
       assert.ok(url.pathname.startsWith('/demo-shop/'), url.href);
       const local = url.pathname.slice('/demo-shop/'.length);
       assert.ok(existsSync(local || '.'), local);

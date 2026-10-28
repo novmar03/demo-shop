@@ -3,6 +3,7 @@ import { handlePaymentReturn } from './payment-result.js?v=20261005-1705';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
 import { products } from './products.js';
+import { landingPage, mountLanding, landingLogo, applicationUrl } from './landing.js?v=20261028-landing';
 import { STORAGE_KEY, loadCart, saveCart, updateCart, orderSnapshot } from './cart.js';
 import { money, productCount, icon, productImage, quantityControls, productCard } from './ui.js?v=20261005-1';
 
@@ -11,15 +12,24 @@ const cartPath = `${basePath}cart/`;
 const checkoutPath = `${basePath}checkout/`;
 const blocksPath = `${basePath}payment-blocks/`;
 let disposeBlocks = () => {};
+let disposeLanding = () => {};
 const app = document.querySelector('#app');
 const cartLink = document.querySelector('#cart-link');
 document.querySelector('.brand').href = basePath;
 cartLink.href = cartPath;
+const brandLogo = document.querySelector('.brand-logo');
+const originalLogo = brandLogo.src;
+document.querySelector('.site-header').insertAdjacentHTML('beforeend', `<button class="landing-menu-toggle" type="button" aria-label="Навигационное меню" aria-expanded="false" aria-controls="landing-navigation"><span></span><span></span><span></span></button><nav id="landing-navigation" class="landing-navigation" aria-label="Навигация по лендингу"><a href="${basePath}#demo-shop">Демомагазин</a><a href="${basePath}#about">О нас</a><a class="landing-apply" href="${applicationUrl}" target="_blank" rel="noopener">Оставить заявку</a></nav>`);
 let storage;
 try { storage = window.localStorage; } catch {}
 let cart = loadCart(storage);
 let toastTimer;
 let paymentPending = false;
+
+function updateCartLink(order) {
+  cartLink.innerHTML = `${icon('cart')}<span>Купить</span>${order.itemCount ? `<span class="cart-count">${order.itemCount}</span>` : ''}`;
+  cartLink.setAttribute('aria-label', `Купить — корзина: ${productCount(order.itemCount)}`);
+}
 
 function toast(message) {
   const el = document.querySelector('#toast');
@@ -30,28 +40,27 @@ function toast(message) {
 }
 
 function render({ focusHeading = false } = {}) {
+  disposeLanding();
+  disposeLanding = () => {};
   disposeBlocks();
   disposeBlocks = () => {};
   const order = orderSnapshot(cart);
-  cartLink.innerHTML = `${icon('cart')}<span>Купить</span>${order.itemCount ? `<span class="cart-count">${order.itemCount}</span>` : ''}`;
-  cartLink.setAttribute('aria-label', `Купить — корзина: ${productCount(order.itemCount)}`);
+  updateCartLink(order);
   const pathname = location.pathname.replace(/index\.html$/, '').replace(/\/$/, '');
   const isBlocks = pathname === blocksPath.replace(/\/$/, '');
   const isCheckout = pathname === checkoutPath.replace(/\/$/, '');
   const isCart = isCheckout || isBlocks || pathname === cartPath.replace(/\/$/, '');
+  document.body.classList.toggle('is-landing', !isCart);
+  brandLogo.src = isCart ? originalLogo : landingLogo;
+  document.querySelector('.landing-navigation').classList.remove('is-open');
+  document.querySelector('.landing-menu-toggle').setAttribute('aria-expanded', 'false');
   document.title = isCart ? `${isCheckout ? 'Checkout' : isBlocks ? 'Платежные блоки' : 'Виджет'} — Демо-магазин` : 'Демо-магазин — CloudPayments';
   if (isCart) cartLink.setAttribute('aria-current', 'page');
   else cartLink.removeAttribute('aria-current');
 
   if (!isCart) {
-    app.innerHTML = `<section class="promo" aria-labelledby="promo-title">
-      <h1 id="promo-title" class="promo-mobile-title" tabindex="-1">Прием платежей для цифровых товаров и услуг</h1>
-      <p class="promo-mobile-details">Быстрое подключение за 1 ₽ · Прием платежей и фискализация по 54-ФЗ · Платежи по подписке, в том числе через СБП</p>
-      <a class="promo-connect" href="https://cloudpayments.ru/" aria-label="Подключить CloudPayments"><span>Подключить</span></a>
-    </section>
-    <div class="section-heading"><div><h2>Каталог</h2></div><span class="catalog-count">${productCount(products.length)}</span></div>
-    <section class="catalog" aria-label="Каталог товаров">${products.map(p => productCard(p, cart.find(i => i.id === p.id)?.quantity || 0)).join('')}</section>
-    <p class="catalog-note">Демонстрационный каталог. Цены приведены для примера.</p>`;
+    app.innerHTML = landingPage(products, cart, basePath);
+    disposeLanding = mountLanding(app);
   } else {
     app.innerHTML = `<a class="back" href="${basePath}" data-nav>${icon('arrow')}Продолжить покупки</a><h1 class="cart-title" tabindex="-1">${isCheckout ? 'Checkout' : isBlocks ? 'Платежные блоки' : 'Виджет'} <span>${productCount(order.itemCount)}</span></h1>` + (order.items.length ? `<div class="cart-layout">
       <section class="cart-items" aria-label="Выбранные товары">${order.items.map(p => `<article class="cart-row" data-product-id="${p.id}">
@@ -75,6 +84,17 @@ function render({ focusHeading = false } = {}) {
 }
 
 document.addEventListener('click', async event => {
+  const menuToggle = event.target.closest('.landing-menu-toggle');
+  if (menuToggle) {
+    const open = menuToggle.getAttribute('aria-expanded') !== 'true';
+    menuToggle.setAttribute('aria-expanded', String(open));
+    document.querySelector('.landing-navigation').classList.toggle('is-open', open);
+    return;
+  }
+  if (event.target.closest('.landing-navigation a')) {
+    document.querySelector('.landing-navigation').classList.remove('is-open');
+    document.querySelector('.landing-menu-toggle').setAttribute('aria-expanded', 'false');
+  }
   if (event.target.closest('[data-retry-blocks]')) { render(); return; }
   const nav = event.target.closest('[data-nav]');
   if (nav && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) {
@@ -92,7 +112,11 @@ document.addEventListener('click', async event => {
     const persisted = saveCart(storage, cart);
     const product = products.find(p => p.id === id);
     const quantity = cart.find(p => p.id === id)?.quantity || 0;
-    render();
+    if (document.body.classList.contains('is-landing')) {
+      // Preserve scroll, typing and already-revealed elements when changing quantity.
+      app.querySelector(`.product[data-product-id="${id}"]`).outerHTML = productCard(product, quantity);
+      updateCartLink(orderSnapshot(cart));
+    } else render();
     const target = app.querySelector(`[data-action="${kind}"][data-id="${id}"]:not(:disabled)`)
       || app.querySelector(`[data-action="add"][data-id="${id}"]:not(:disabled)`)
       || app.querySelector('.back');
@@ -126,6 +150,14 @@ document.addEventListener('click', async event => {
     }
   }
 });
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && document.querySelector('.landing-navigation.is-open')) {
+    document.querySelector('.landing-navigation').classList.remove('is-open');
+    const toggle = document.querySelector('.landing-menu-toggle');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.focus();
+  }
+});
 window.addEventListener('popstate', () => render({ focusHeading: true }));
 window.addEventListener('storage', event => {
   if (event.key === STORAGE_KEY || event.key === null) {
@@ -134,4 +166,7 @@ window.addEventListener('storage', event => {
   }
 });
 render();
+if (location.hash === '#demo-shop' || location.hash === '#about') {
+  requestAnimationFrame(() => document.querySelector(location.hash)?.scrollIntoView());
+}
 handlePaymentReturn();
