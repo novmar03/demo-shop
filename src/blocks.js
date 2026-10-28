@@ -1,4 +1,4 @@
-import { paymentParameters } from './payment.js';
+import { paymentParameters, widgetPublicId } from './payment.js?v=20261028-classic';
 let loading;
 function loadBlocks() {
   if (window.cp?.PaymentBlocks) return Promise.resolve(window.cp.PaymentBlocks);
@@ -26,7 +26,7 @@ export function mountBlocks(container, order, onResult) {
   loadBlocks().then(PaymentBlocks => {
     if (disposed || !container.isConnected) return;
     container.replaceChildren();
-    instance = new PaymentBlocks({ ...paymentParameters(order), language: 'ru-RU' }, {
+    instance = new PaymentBlocks({ ...paymentParameters(order), publicTerminalId: widgetPublicId, language: 'ru-RU' }, {
       appearance: {
         colors: { primaryButtonColor: '#2e71fc', primaryHoverButtonColor: '#265dce', primaryButtonTextColor: '#ffffff', primaryButtonHoverTextColor: '#ffffff', activeInputColor: '#2e71fc' },
         borders: { radius: '8px' },
