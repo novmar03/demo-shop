@@ -1,4 +1,4 @@
-export const publicId = 'pk_066676ef6f171ddb7da63bbcd591c';
+export const publicId = 'pk_de5c9efda336e5539a0631a5ccd27';
 export const widgetPublicId = 'pk_de5c9efda336e5539a0631a5ccd27';
 const SDK_URL = 'https://widget.cloudpayments.ru/bundles/cloudpayments.js';
 let loading;
