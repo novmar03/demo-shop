@@ -29,11 +29,17 @@ export function mountStudy(header, scenarios) {
     navigation.removeAttribute('aria-label');
     navigation.querySelector('h2').remove();
     navigation.className = 'study-scenarios';
-    dialog.innerHTML = `<div class="study-shell"><div class="study-top"><div><span class="study-eyebrow">ЗНАКОМСТВО С ОПЛАТОЙ</span><h2 id="study-title">Три способа принимать платежи</h2><p>Выберите, как оплата будет выглядеть на вашем сайте</p></div><button type="button" class="study-toggle is-active" aria-label="Закрыть режим изучения">${eye}<span>Режим изучения</span><span aria-hidden="true">×</span></button></div><div class="study-navigation"></div><div class="study-grid">${descriptions.map((d, i) => `<section class="study-card" style="--study-order:${i}">${arrow}<div class="study-card-content"><div class="study-card-meta"><span>0${i + 1}</span><span>${d.tag}</span></div><h3>${d.title}</h3><h4>${d.lead}</h4><p>${d.text}</p><ul>${d.points.map(p => `<li>${p}</li>`).join('')}</ul></div></section>`).join('')}</div><p class="study-footnote">Доступные способы оплаты зависят от настроек вашего терминала.<span>Нажмите Esc, чтобы вернуться к заказу</span></p></div>`;
+    navigation.querySelectorAll('a').forEach(link => {
+      const label = document.createElement('span');
+      label.className = 'study-scenario-label';
+      label.textContent = link.textContent;
+      link.replaceWith(label);
+    });
+    dialog.innerHTML = `<div class="study-shell"><div class="study-top"><div><h2 id="study-title">Рассмотрим разные платежные сценарии</h2><p>Выберите, как оплата будет выглядеть на вашем сайте</p></div><button type="button" class="study-toggle is-active" aria-label="Закрыть режим изучения">${eye}<span>Режим изучения</span><span aria-hidden="true">×</span></button></div><div class="study-navigation"></div><div class="study-grid">${descriptions.map((d, i) => `<section class="study-card" style="--study-order:${i}">${arrow}<div class="study-card-content"><div class="study-card-meta"><span>0${i + 1}</span><span>${d.tag}</span></div><h3>${d.title}</h3><h4>${d.lead}</h4><p>${d.text}</p><ul>${d.points.map(p => `<li>${p}</li>`).join('')}</ul></div></section>`).join('')}</div></div>`;
     dialog.querySelector('.study-navigation').append(navigation);
     dialog.querySelector('.is-active').addEventListener('click', close);
     dialog.addEventListener('click', event => {
-      if (event.target === dialog || event.target.closest('[data-nav]')) close();
+      if (event.target === dialog) close();
     });
     const openedDialog = dialog;
     dialog.addEventListener('close', () => {
