@@ -1,7 +1,7 @@
 import { publicId } from './payment.js';
 import { returnHome, rememberPaymentAmount } from './payment-result.js?v=20261005-1705';
 let loading;
-export const checkoutApi = 'https://d5dlit4s64dgke72o1ih.3rspsmhh.apigw.yandexcloud.net';
+export const checkoutApi = 'https://d5d67uu5n2urvbv51580.d8epmcec.apigw.yandexcloud.net';
 let paymentLocked = false;
 
 export function redirectToBank(result, doc = document) {
