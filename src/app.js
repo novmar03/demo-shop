@@ -1,7 +1,7 @@
 import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1705';
 import { handlePaymentReturn } from './payment-result.js?v=20261005-1705';
 import { mountBlocks } from './blocks.js';
-import { openPayment } from './payment.js';
+import { openPayment } from './payment.js?v=20261028-classic';
 import { products } from './products.js?v=20261028-merch';
 import { landingPage, mountLanding, landingLogo, applicationUrl } from './landing.js?v=20261028-merch';
 import { STORAGE_KEY, loadCart, saveCart, updateCart, orderSnapshot } from './cart.js?v=20261028-merch';

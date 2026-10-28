@@ -1,4 +1,5 @@
 export const publicId = 'pk_066676ef6f171ddb7da63bbcd591c';
+export const widgetPublicId = 'pk_de5c9efda336e5539a0631a5ccd27';
 const SDK_URL = 'https://widget.cloudpayments.ru/bundles/cloudpayments.js';
 let loading;
 
@@ -44,7 +45,7 @@ export function loadPaymentWidget() {
 }
 
 export async function openPayment(order) {
-  const parameters = paymentParameters(order);
+  const parameters = { ...paymentParameters(order), publicTerminalId: widgetPublicId, skin: 'classic' };
   const CloudPayments = await loadPaymentWidget();
   const widget = new CloudPayments();
   return widget.start(parameters);
