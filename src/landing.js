@@ -1,4 +1,4 @@
-import { productCard } from './ui.js?v=20261028-landing';
+import { productCard } from './ui.js?v=20261028-merch';
 
 const asset = name => new URL(`../public/landing/${name}`, import.meta.url).pathname;
 export const landingLogo = asset('rec5121425401-Logo.svg');

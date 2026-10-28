@@ -31,9 +31,14 @@ Animations use 1-second zoom/fade and 100-pixel rise, chained product entry,
 typing/deleting the original three words, and button hover transitions.
 `prefers-reduced-motion` disables movement and typing.
 
-The original demo-shop product IDs, photographs, prices, cart storage and payment
-routes are retained. These IDs and prices are shared with the existing Yandex
-Cloud backend. Changing them to the reference site's merchandise would require
-a corresponding backend catalog change.
+The catalog now uses the eight merchandise products and source IDs from Easy,
+including original alternate photographs for hover. Cart storage uses a new key,
+so retired product IDs are never reinterpreted as merchandise. The floating cart
+is mounted directly in `body`: the header's backdrop-filter otherwise makes it
+relative to the header instead of the viewport.
+
+The Yandex Checkout function must use `backend/catalog.cjs` to resolve the new
+IDs and prices. The frontend sends IDs and quantities, never an authoritative
+client price. See `backend/README.md` for the server catalog update.
 
 Run `npm test` for payment, cart, return handling, asset and GitHub Pages path checks.

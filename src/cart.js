@@ -1,5 +1,5 @@
-import {products} from './products.js';
-export const STORAGE_KEY='demo-store-cart-v1';
+import {products} from './products.js?v=20261028-merch';
+export const STORAGE_KEY='demo-store-cart-merch-v2';
 export function normalizeCart(value){
  if(!Array.isArray(value))return [];
  const quantities=new Map();

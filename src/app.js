@@ -2,10 +2,10 @@ import { checkoutForm, mountCheckout } from './checkout.js?v=20261005-1705';
 import { handlePaymentReturn } from './payment-result.js?v=20261005-1705';
 import { mountBlocks } from './blocks.js';
 import { openPayment } from './payment.js';
-import { products } from './products.js';
-import { landingPage, mountLanding, landingLogo, applicationUrl } from './landing.js?v=20261028-landing';
-import { STORAGE_KEY, loadCart, saveCart, updateCart, orderSnapshot } from './cart.js';
-import { money, productCount, icon, productImage, quantityControls, productCard } from './ui.js?v=20261005-1';
+import { products } from './products.js?v=20261028-merch';
+import { landingPage, mountLanding, landingLogo, applicationUrl } from './landing.js?v=20261028-merch';
+import { STORAGE_KEY, loadCart, saveCart, updateCart, orderSnapshot } from './cart.js?v=20261028-merch';
+import { money, productCount, icon, productImage, quantityControls, productCard } from './ui.js?v=20261028-merch';
 
 const basePath = new URL('../', import.meta.url).pathname;
 const cartPath = `${basePath}cart/`;
@@ -51,6 +51,9 @@ function render({ focusHeading = false } = {}) {
   const isCheckout = pathname === checkoutPath.replace(/\/$/, '');
   const isCart = isCheckout || isBlocks || pathname === cartPath.replace(/\/$/, '');
   document.body.classList.toggle('is-landing', !isCart);
+  // A backdrop-filter on the header creates a containing block for fixed children.
+  // Keep the floating cart at body level so it stays anchored to the viewport.
+  (isCart ? document.querySelector('.site-header') : document.body).append(cartLink);
   brandLogo.src = isCart ? originalLogo : landingLogo;
   document.querySelector('.landing-navigation').classList.remove('is-open');
   document.querySelector('.landing-menu-toggle').setAttribute('aria-expanded', 'false');

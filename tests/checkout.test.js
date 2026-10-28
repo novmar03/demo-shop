@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { checkoutForm, mountCheckout, redirectToBank, checkoutApi, formatCardNumber, cardValues } from '../src/checkout.js';
 import { orderSnapshot } from '../src/cart.js';
 test('checkout form keeps card fields out of normal form submission', () => {
-  const html = checkoutForm(orderSnapshot([{ id: 1, quantity: 2 }]));
+  const html = checkoutForm(orderSnapshot([{ id: 1792768165569, quantity: 2 }]));
   assert.equal((html.match(/data-cp=/g) || []).length, 4);
   assert.doesNotMatch(html, /\sname=/);
   assert.doesNotMatch(html, /data-cardholder|data-preview-name|data-cp="name"|<small>123/);
@@ -20,12 +20,12 @@ test('checkout submits minimal payload, blocks double clicks and handles decline
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url, options) => {
     assert.equal(url, `${checkoutApi}/payment`);
-    assert.deepEqual(JSON.parse(options.body), { cardCryptogramPacket: 'mock-cryptogram', items: [{ id: 1, quantity: 2 }] });
+    assert.deepEqual(JSON.parse(options.body), { cardCryptogramPacket: 'mock-cryptogram', items: [{ id: 1792768165569, quantity: 2 }] });
     return { ok: true, json: async () => ({ success: false, status: 'declined', message: 'Отказ банка' }) };
   };
   let destination;
   window.location = { assign(url) { destination = url; } };
-  const dispose = mountCheckout(form, orderSnapshot([{ id: 1, quantity: 2 }]));
+  const dispose = mountCheckout(form, orderSnapshot([{ id: 1792768165569, quantity: 2 }]));
   await Promise.all([submit({ preventDefault() {} }), submit({ preventDefault() {} })]);
   assert.equal(calls, 1); assert.equal(resets, 1);
   assert.ok(destination.endsWith('/?payment=failed'));

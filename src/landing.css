@@ -19,7 +19,8 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
 .landing-navigation .landing-apply{margin-left:10px;background:#2e71fc;color:#fff;padding:14px 16px;border-radius:8px;white-space:nowrap}
 .landing-navigation .landing-apply:hover{background:#2560d4;color:#fff}
 .landing-menu-toggle{display:none}
-.is-landing #cart-link{position:fixed;right:30px;bottom:30px;min-width:0;width:64px;height:64px;border-radius:50%;padding:18px;background:#fff;color:#0b1e46;box-shadow:0 5px 24px #0b1e4626;z-index:40}
+.is-landing #cart-link{position:fixed;top:auto;left:auto;right:30px;bottom:max(30px,env(safe-area-inset-bottom));min-width:0;width:64px;height:64px;border-radius:50%;padding:18px;background:#fff;color:#0b1e46;box-shadow:0 5px 24px #0b1e4626;z-index:40}
+.is-landing #cart-link>.icon{display:block;width:28px;height:28px}
 .is-landing #cart-link>span:not(.cart-count){display:none}
 .is-landing #cart-link .cart-count{position:absolute;right:-3px;top:-3px;background:#2e71fc;color:#fff}
 .is-landing #cart-link:not(:has(.cart-count)){display:none}
@@ -46,6 +47,13 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
 .landing .catalog{gap:20px;grid-template-columns:repeat(4,minmax(0,1fr))}
 .landing .product{border:0;border-radius:16px;box-shadow:none;background:#fff}
 .landing .product-image{height:auto;aspect-ratio:100/133;background:#fff;padding:22px}
+.landing .product-image:has(.image-hover){padding:0}
+.product-image .image-frame>img.image-hover{position:absolute;inset:0;opacity:0;pointer-events:none}
+.product-image .image-frame>img.image-primary,.product-image .image-frame>img.image-hover{transition:opacity .1s linear}
+@media(hover:hover) and (pointer:fine){
+ .product-image:hover .image-frame>img.image-hover,.product:focus-within .image-frame>img.image-hover{opacity:1}
+ .product-image:hover .image-frame:has(.image-hover)>img.image-primary,.product:focus-within .image-frame:has(.image-hover)>img.image-primary{opacity:0}
+}
 .landing .image-frame{max-width:100%;min-height:0}
 .landing .image-part{height:auto;max-width:100%;width:100%}
 .landing .product-info{padding:18px;min-height:182px}
@@ -146,7 +154,7 @@ html:has(.is-landing){scroll-behavior:smooth;scroll-padding-top:65px}
  .landing-about-art{left:20px;right:auto;bottom:84px;width:calc(100% - 40px)}
  .landing-money{width:119px;right:0;top:258px}.landing-about-button{left:20px;right:20px;width:auto;top:auto;bottom:20px}
  .landing-footer{height:75px;line-height:20px;font-size:12px}.landing-footer img{width:132px}
- .is-landing #cart-link{right:20px;bottom:20px;width:56px;height:56px;padding:15px}
+ .is-landing #cart-link{right:20px;bottom:max(20px,env(safe-area-inset-bottom));width:56px;height:56px;padding:15px}
 }
 @media(max-width:479px){
  .landing-hero{height:766px}.landing-hero h1{font-size:26px;line-height:29px;left:20px;width:calc(100% - 40px)}

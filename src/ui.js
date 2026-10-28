@@ -22,7 +22,8 @@ export function icon(name) {
 }
 
 export function productImage(product, className = '') {
-  return `<div class="product-image ${className}"><div class="image-frame ${product.imagePart ? `image-part image-${product.imagePart}` : ''}"><img src="${product.image}" alt="${product.name}" loading="lazy" decoding="async"></div></div>`;
+  const hover = product.hoverImage && className !== 'cart-image';
+  return `<div class="product-image ${className}"><div class="image-frame ${product.imagePart ? `image-part image-${product.imagePart}` : ''}"><img class="image-primary" src="${product.image}" alt="${product.name}" loading="lazy" decoding="async">${hover ? `<img class="image-hover" src="${product.hoverImage}" alt="" aria-hidden="true" loading="lazy" decoding="async">` : ''}</div></div>`;
 }
 
 export function quantityControls(product, quantity, { allowRemove = false } = {}) {

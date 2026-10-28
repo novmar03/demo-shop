@@ -25,11 +25,12 @@ test('Русское форматирование цен и количества
   assert.deepEqual([1, 2, 5, 11, 21, 22, 111].map(productCount), ['1 товар', '2 товара', '5 товаров', '11 товаров', '21 товар', '22 товара', '111 товаров']);
 });
 
-test('Восемь товаров с фотографиями, описанием и ценой', () => {
+test('Восемь товаров с двумя фотографиями и ценой', () => {
   assert.equal(products.length, 8);
   assert.equal(new Set(products.map(p => p.id)).size, 8);
   for (const product of products) {
-    assert.ok(product.description.length > 30);
+    assert.ok(product.name.length > 0);
+    assert.ok(existsSync(product.hoverImage), product.hoverImage);
     assert.ok(Number.isSafeInteger(product.price) && product.price > 0);
     assert.ok(existsSync(product.image), product.image);
     assert.match(product.image, /\.webp$/);
