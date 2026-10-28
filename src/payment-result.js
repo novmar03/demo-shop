@@ -23,15 +23,15 @@ export function returnHome(result) {
 export function handlePaymentReturn() {
   const url = new URL(window.location.href);
   const result = url.searchParams.get('payment');
-  if (!['success', 'failed', 'unknown'].includes(result)) return;
+  if (!['success', 'failed', 'unknown'].includes(result)) return null;
   // The query parameter controls presentation only; it is not proof of payment.
   if (url.pathname !== homePath) {
     window.location.replace(paymentHomeUrl(result));
-    return;
+    return result;
   }
   url.searchParams.delete('payment');
   window.history.replaceState({}, '', url.pathname + url.search + url.hash);
-  if (result === 'success') return;
+  if (result === 'success') return result;
   const style = document.createElement('style');
   style.textContent = `
     .payment-result-dialog{box-sizing:border-box;width:540px;max-width:calc(100vw - 48px);border:0;border-radius:14px;padding:48px 48px 44px;background:#f7f9ff;color:#202020;text-align:center;font-family:inherit;box-shadow:none}
@@ -70,4 +70,5 @@ export function handlePaymentReturn() {
     window.location.assign(destination);
   }, { once: true });
   dialog.showModal();
+  return result;
 }
