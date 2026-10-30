@@ -1,10 +1,10 @@
 import { paymentConfig } from "./config.js";
 export const publicId = paymentConfig.publicId;
-export const widgetPublicId = publicId;
+export const publicTerminalId = paymentConfig.publicId;
 const SDK_URL = "https://widget.cloudpayments.ru/bundles/cloudpayments.js";
 let loading;
 
-export function paymentParameters(order) {
+export function createIntentParams(order) {
   if (
     !order.items.length ||
     !Number.isFinite(order.totalAmount) ||
@@ -13,7 +13,7 @@ export function paymentParameters(order) {
     throw new Error("Корзина пуста или сумма некорректна.");
   }
   return {
-    publicTerminalId: publicId,
+    publicTerminalId,
     description: "Покупка в демо-магазине",
     amount: order.totalAmount,
     currency: "RUB",
@@ -59,12 +59,11 @@ export function loadPaymentWidget() {
 }
 
 export async function openPayment(order) {
-  const parameters = {
-    ...paymentParameters(order),
-    publicTerminalId: widgetPublicId,
+  const intentParams = {
+    ...createIntentParams(order),
     skin: paymentConfig.widgetSkin,
   };
   const CloudPayments = await loadPaymentWidget();
   const widget = new CloudPayments();
-  return widget.start(parameters);
+  return widget.start(intentParams);
 }

@@ -1,22 +1,22 @@
-import { mountStudy } from "./study.js?v=20261030-review";
-import { checkoutForm, mountCheckout } from "./checkout.js?v=20261030-review";
-import { handlePaymentReturn } from "./payment-result.js?v=20261030-review";
-import { mountBlocks } from "./blocks.js";
-import { openPayment } from "./payment.js?v=20261030-review";
-import { products } from "./products.js?v=20261030-review";
+import { mountStudy } from "./study.js?v=20261031-cp-docs";
+import { checkoutForm, mountCheckout } from "./checkout.js?v=20261031-cp-docs";
+import { handlePaymentReturn } from "./payment-result.js?v=20261031-cp-docs";
+import { mountBlocks } from "./blocks.js?v=20261031-cp-docs";
+import { openPayment } from "./payment.js?v=20261031-cp-docs";
+import { products } from "./products.js?v=20261031-cp-docs";
 import {
   landingPage,
   mountLanding,
   landingLogo,
   applicationUrl,
-} from "./landing.js?v=20261030-review";
+} from "./landing.js?v=20261031-cp-docs";
 import {
   STORAGE_KEY,
   loadCart,
   saveCart,
   updateCart,
   orderSnapshot,
-} from "./cart.js?v=20261030-review";
+} from "./cart.js?v=20261031-cp-docs";
 import {
   money,
   productCount,
@@ -24,7 +24,7 @@ import {
   productImage,
   quantityControls,
   productCard,
-} from "./ui.js?v=20261030-review";
+} from "./ui.js?v=20261031-cp-docs";
 
 const basePath = new URL("../", import.meta.url).pathname;
 const cartPath = `${basePath}cart/`;
@@ -254,19 +254,19 @@ document.addEventListener("click", async (event) => {
       new CustomEvent("demo-store:checkout", { detail: order }),
     );
     try {
-      const result = await openPayment(order);
+      const widgetResult = await openPayment(order);
       window.dispatchEvent(
         new CustomEvent("demo-store:payment-result", {
-          detail: { order, result },
+          detail: { order, result: widgetResult },
         }),
       );
-      if (result?.status === "success") {
+      if (widgetResult?.status === "success") {
         clearCart();
         render();
         toast("CloudPayments сообщает об успешной оплате.");
-      } else if (result?.type === "cancel")
+      } else if (widgetResult?.type === "cancel")
         toast("Форма оплаты закрыта. Корзина сохранена.");
-      else if (result?.type === "error" || result?.status === "fail")
+      else if (widgetResult?.type === "error" || widgetResult?.status === "fail")
         toast("Оплата не завершена. Попробуйте ещё раз.");
     } catch {
       toast(

@@ -1,4 +1,4 @@
-import { products } from "./products.js?v=20261030-review";
+import { products } from "./products.js?v=20261031-cp-docs";
 export const STORAGE_KEY = "demo-store-cart-merch-v2";
 export function normalizeCart(value) {
   if (!Array.isArray(value)) return [];

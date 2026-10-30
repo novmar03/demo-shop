@@ -1,4 +1,4 @@
-import { productCard } from "./ui.js?v=20261030-review";
+import { productCard } from "./ui.js?v=20261031-cp-docs";
 
 const asset = (name) =>
   new URL(`../public/landing/${name}`, import.meta.url).pathname;

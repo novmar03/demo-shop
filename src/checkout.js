@@ -3,7 +3,7 @@ import { publicId } from "./payment.js";
 import {
   returnHome,
   rememberPaymentAmount,
-} from "./payment-result.js?v=20261030-review";
+} from "./payment-result.js?v=20261031-cp-docs";
 let loading;
 export const checkoutApi = paymentConfig.checkoutApi;
 let paymentLocked = false;

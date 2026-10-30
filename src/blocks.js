@@ -1,8 +1,7 @@
 import { paymentConfig } from "./config.js";
 import {
-  paymentParameters,
-  widgetPublicId,
-} from "./payment.js?v=20261030-review";
+  createIntentParams,
+} from "./payment.js?v=20261031-cp-docs";
 let loading;
 function loadBlocks() {
   if (window.cp?.PaymentBlocks) return Promise.resolve(window.cp.PaymentBlocks);
@@ -29,40 +28,38 @@ function loadBlocks() {
   return loading;
 }
 
-// Each render owns its instance. Disposal also cancels an unfinished SDK load.
+// Each render owns its blocksApp. Disposal also cancels an unfinished SDK load.
 export function mountBlocks(container, order, onResult) {
   let disposed = false;
-  let instance;
+  let blocksApp;
   loadBlocks()
     .then((PaymentBlocks) => {
       if (disposed || !container.isConnected) return;
       container.replaceChildren();
-      instance = new PaymentBlocks(
-        {
-          ...paymentParameters(order),
-          publicTerminalId: widgetPublicId,
-          language: "ru-RU",
-        },
-        {
-          appearance: {
-            colors: {
-              primaryButtonColor: "#2e71fc",
-              primaryHoverButtonColor: "#265dce",
-              primaryButtonTextColor: "#ffffff",
-              primaryButtonHoverTextColor: "#ffffff",
-              activeInputColor: "#2e71fc",
-            },
-            borders: { radius: "8px" },
+      const initializationParams = {
+        ...createIntentParams(order),
+        language: "ru-RU",
+      };
+      const customizationParams = {
+        appearance: {
+          colors: {
+            primaryButtonColor: "#2e71fc",
+            primaryHoverButtonColor: "#2560d4",
+            primaryButtonTextColor: "#ffffff",
+            primaryButtonHoverTextColor: "#ffffff",
+            activeInputColor: "#2e71fc",
           },
-          components: { paymentButton: { text: "Оплатить" } },
+          borders: { radius: "8px" },
         },
-      );
-      instance.mount(container);
-      instance.on("success", (result) => {
-        if (!disposed) onResult(order, { ...result, status: "success" });
+        components: { paymentButton: { text: "Оплатить" } },
+      };
+      blocksApp = new PaymentBlocks(initializationParams, customizationParams);
+      blocksApp.mount(container);
+      blocksApp.on("success", (result) => {
+        if (!disposed) onResult(order, result);
       });
-      instance.on("fail", (result) => {
-        if (!disposed) onResult(order, { ...result, status: "fail" });
+      blocksApp.on("fail", (result) => {
+        if (!disposed) onResult(order, result);
       });
     })
     .catch(() => {
@@ -72,10 +69,10 @@ export function mountBlocks(container, order, onResult) {
     });
   return () => {
     disposed = true;
-    if (instance) {
-      instance.off("success");
-      instance.off("fail");
-      instance.unmount();
+    if (blocksApp) {
+      blocksApp.off("success");
+      blocksApp.off("fail");
+      blocksApp.unmount();
     }
   };
 }
