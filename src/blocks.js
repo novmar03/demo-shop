@@ -47,7 +47,6 @@ export function mountBlocks(container, order, onResult) {
             primaryHoverButtonColor: "#2560d4",
             primaryButtonTextColor: "#ffffff",
             primaryButtonHoverTextColor: "#ffffff",
-            activeInputColor: "#2e71fc",
           },
           borders: { radius: "8px" },
         },
